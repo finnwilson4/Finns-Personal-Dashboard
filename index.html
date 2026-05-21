@@ -113,7 +113,7 @@
 
     <div class="field">
       <label>Pages Read:</label>
-      <input id=pagesRead type="number" style="
+      <input id=pages type="number" style="
         background: none; 
         border: none;
         text-align: center;
@@ -131,3 +131,27 @@
   </div>
 
 </div>
+
+<script>
+
+const bookInputs = [
+    "bookName",
+    "author",
+    "pages"
+];
+
+bookInputs.forEach(function(id) {
+
+    const element = document.getElementById(id);
+
+    // LOAD saved value
+    element.value = localStorage.getItem(id) || "";
+
+    // SAVE whenever input changes
+    element.addEventListener("input", function() {
+        localStorage.setItem(id, element.value);
+    });
+
+});
+
+</script>
