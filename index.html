@@ -48,13 +48,13 @@
       width: 100%;
       border: 1px solid rgb(255, 255, 255);
       border-radius: 5px;
-      margin: 10px;
+      margin: 2px;
       
     }
 
     .field {
       display: flex;
-      align-items: center;
+      align-items: left;
 
     }
   </style>
@@ -64,8 +64,6 @@
 
   <h1>Finn's Dashboard</h1>
   <h2>Heading 2</h2>
-  <h3>Heading 1</h3>
-  <h0>Heading 0</h0>
 
   <p>Paragraph 1</p>
 
@@ -79,7 +77,7 @@
 
 </body>
 <div class="container">
-  <div style="padding: 1px; background-color: rgba(81, 217, 255, 0.392);" class="box">
+  <div  class="box" style="width: 66%; padding: 1px; background-color: rgba(81, 217, 255, 0.392);">
     <h2 style="margin: 0px;font-size: 22px"> Currently Reading:
       <input id=bookName style="
         width: 100%;
@@ -104,7 +102,6 @@
     <div class="field">
       <label>Date Started:</label>
       <input id=dateStarted type="date" style="
-        width: 100%;
         background: none; 
         border: none;
         text-align: center;
@@ -115,7 +112,6 @@
     <div class="field">
       <label>Pages Read:</label>
       <input id=pages type="number" style="
-        width: 100%;
         background: none; 
         border: none;
         text-align: center;
@@ -124,14 +120,31 @@
     </div>
   </div>
 
+  <div class="box" style="border:none; width:150%;">
+
+    <div id="calendar">
+      <iframe
+        src="https://timetreeapp.com/public_calendars/poopoo_peepee/embed/2weeks?calendar_name=false&frame_color=%232ecc87"
+        style="
+          border:none;
+          width:111%;
+          height:112%;
+          transform:scale(0.9);
+          transform-origin: top left;">
+      </iframe>
+    </div>  
+  </div>
+
+</div>
+
+<div class="container" style="height: 300px">
   <div class="box">
-    Section 2
-  </div>
+    <h2 style="margin: 0px;font-size: 22px"> Weekly To Dos</h2>
+    <div class="box">
+      
 
- <div class="box">
-    Section 3
+    </div>
   </div>
-
 </div>
 
 <script>
@@ -142,14 +155,14 @@ const bookInputs = [
     "pages"
 ];
 
+
+// Currently Reading Section
 bookInputs.forEach(function(id) {
 
     const element = document.getElementById(id);
 
-    // LOAD saved value
     element.value = localStorage.getItem(id) || "";
 
-    // SAVE whenever input changes
     element.addEventListener("input", function() {
         localStorage.setItem(id, element.value);
     });
