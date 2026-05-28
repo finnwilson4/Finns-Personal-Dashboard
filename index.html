@@ -3,17 +3,18 @@
   <title>Dashboard Homepage</title>
 
   <style>
+    *{box-sizing: border-box}
     body {
-      border: 1px solid rgb(255, 255, 255);
       font-family: Arial;
       background: rgb(42, 43, 46);
       text-align: center;
+      margin: 0;
       padding-top: 10px;
     }
 
     h1 {
       border: 1px dashed rgb(255, 255, 255);
-      color: #007631;
+      color: #007b19;
       font-size: 50px;
     }
 
@@ -36,27 +37,102 @@
       background: #069915;
     }
 
-    .container {
-      display: flex;
-      gap: 0px;
-      border: 1px solid rgb(255, 255, 255);
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1%;
       border-radius: 5px;
       margin: 10px;
     }
 
     .box {
-      width: 100%;
       border: 1px solid rgb(255, 255, 255);
       border-radius: 5px;
-      margin: 2px;
       
+    }
+
+    .reading {
+      border: 1px solid white;
+      background-color: rgba(81, 255, 249, 0.2);
+      grid-column: span 4;
+      padding: 2%;
+      
+    }
+
+    .calendar{
+      
+      border-radius: 20px;
+      overflow: hidden;
+      grid-column: span 8;
+    }
+
+    .todos {
+      grid-column: span 4;
+    }
+
+    .bingo {
+      border-radius: 10px;
+      grid-column: span 8;
+      grid-row: span 2;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .bottom {
+    grid-column: span 5;
     }
 
     .field {
       display: flex;
-      align-items: left;
-
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      gap: 10px;
     }
+
+    .field input {
+      flex: 1;
+      background: none;
+      border: none;
+      color: white;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .todo-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 2% 10%;
+    }
+
+    .bingo-table {
+    width: 100%;
+    flex-grow:1;
+    border-collapse:collapse;
+    border-radius: 5px;
+    table-layout:fixed;
+    color: white;
+    }
+
+    .bingo-table td {
+      border: 1px solid white;
+      color: rgb(1, 167, 1);
+      text-align: center;
+      padding: 10px 10px;
+      border-radius: 5px;
+    }
+    
+    .bingo-title {
+      font-size: 32px;
+      color: red;
+    }
+    .calendar iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  
   </style>
 </head>
 
@@ -64,8 +140,6 @@
 
   <h1>Finn's Dashboard</h1>
   <h2>Heading 2</h2>
-
-  <p>Paragraph 1</p>
 
   <button onclick="alert('Website is working!')">
     Test Website :D
@@ -75,77 +149,111 @@
     Poo Poo Button
   </button>
 
-</body>
-<div class="container" style="height:25%">
-  <div  class="box" style="width: 66%; padding: 1px; background-color: rgba(81, 217, 255, 0.392);">
-    <h2 style="margin: 0px;font-size: 22px"> Currently Reading:
-      <input id=bookName style="
-        width: 100%;
-        background: none; 
-        border: none;
-        text-align: center;
-        color: white;
-        font-size:18px;">
-    </h2>
 
-    <div class="field">
-      <label>Author:</label>
-      <input id=author style="
-        width: 100%;
-        background: none; 
-        border: none;
-        text-align: center;
-        color: white;
-        font-size:12px;">
+<div class="dashboard">
+    <div class="box reading">
+      <h2>Currently Reading</h2>
+
+      <div class="field">
+        <label>Book:</label>
+        <input id="bookName">
+      </div>
+
+      <div class="field">
+        <label>Author:</label>
+        <input id="author">
+      </div>
+
+      <div class="field">
+        <label>Date Started:</label>
+        <input id="dateStarted" type="date">
+      </div>
+
+      <div class="field">
+        <label>Pages Read:</label>
+        <input id="pages" type="number">
+      </div>
     </div>
 
-    <div class="field">
-      <label>Date Started:</label>
-      <input id=dateStarted type="date" style="
-        background: none; 
-        border: none;
-        text-align: center;
-        color: white;
-        font-size:12px;">
-    </div>
-
-    <div class="field">
-      <label>Pages Read:</label>
-      <input id=pages type="number" style="
-        background: none; 
-        border: none;
-        text-align: center;
-        color: white;
-        font-size:12px;">
-    </div>
-  </div>
-
-  <div class="box" style="border:none; width:150%;">
-
-    <div id="calendar">
+    <div class="box calendar">
       <iframe
-        src="https://timetreeapp.com/public_calendars/poopoo_peepee/embed/2weeks?calendar_name=false&frame_color=%232ecc87"
-        style="
-          border:none;
-          width:111%;
-          height:112%;
-          transform:scale(0.9);
-          transform-origin: top left;">
+        src="https://timetreeapp.com/public_calendars/poopoo_peepee/embed/2weeks?calendar_name=false&frame_color=%232ecc87">
       </iframe>
-    </div>  
-  </div>
+    </div>
 
-</div>
+    <div class="box todos">
 
-<div class="container" style="height: 300px">
-  <div class="box">
-    <h2 style="margin: 0px;font-size: 22px"> Weekly To Dos</h2>
-    <div class="box">
-      
+      <h2>Weekly To Dos</h2>
+
+      <div class="todo-row">
+        <label for="hoover">Hoover</label>
+        <input id="hoover" type="checkbox">
+      </div>
+
+      <div class="todo-row">
+        <label for="meals">Plan Meals</label>
+        <input id="meals" type="checkbox">
+      </div>
+
+      <div class="todo-row">
+        <label for="finances">Look at Finances</label>
+        <input id="finances" type="checkbox">
+      </div>
+    </div>
+
+    <div class="box bingo">
+      <table class="bingo-table">
+        <tbody>
+
+          <tr>
+            <td>Make a Tirimasu</td>
+            <td>Climb Snowdon</td>
+            <td>Finish placement</td>
+            <td>Holiday with Em</td>
+          </tr>
+
+          <tr>
+            <td>Make a Lasagna in Dish</td>
+            <td>Put £250 in LISA</td>
+            <td>Start Car and Hol Savings</td>
+            <td>Climb Ben Nevis</td>
+          </tr>
+
+          <tr>
+            <td>Climb Scafell Pike</td>
+            <td colspan="2" class="bingo-title">2026 Bingo</td>
+            <td>Learn a Guitar Song</td>
+          </tr>
+
+          <tr>
+            <td>Read Schrodinger's Cat</td>
+            <td>cell 14</td>
+            <td>cell 15</td>
+            <td>cell 16</td>
+          </tr>
+
+          <tr>
+            <td>cell 17</td>
+            <td>cell 18</td>
+            <td>cell 19</td>
+            <td>cell 20</td>
+          </tr>
+
+        </tbody>
+
+      </table>
+    </div>
+
+    <div class="box bottom">
+
+      <h2>Future Section</h2>
 
     </div>
+
+    <div class="box calendar">
+      <h2>ftykfgyl</h2>
+    </div>
   </div>
-</div>
 
 <script>
 
@@ -154,7 +262,6 @@ const bookInputs = [
     "author",
     "pages"
 ];
-
 
 // Currently Reading Section
 bookInputs.forEach(function(id) {
