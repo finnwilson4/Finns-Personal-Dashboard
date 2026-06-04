@@ -1,271 +1,66 @@
 
 <head>
+  <link rel="stylesheet" href="dashboard-style.css">
   <title>Dashboard Homepage</title>
-
-  <style>
-    *{box-sizing: border-box}
-
-    body {
-      font-family: Arial;
-      background: rgb(42, 43, 46);
-      text-align: center;
-      margin: 0;
-      padding-top: 10px;
-    }
-
-    h1 {
-      border: 1px dashed rgb(255, 255, 255);
-      color: #007b19;
-      font-size: 50px;
-    }
-
-    h2 {
-      padding: 0px;
-      margin-bottom: 10px;
-      margin-top: 5px;
-    }
-
-    p {
-      color: #fb0606;
-      font-size: 20px;
-    }
-
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      border: none;
-      background: black;
-      color: white;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #069915;
-    }
-
-    .page-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr 220px;
-      gap: 16px;
-      align-items: start;
-      padding: 10px;
-    }
-
-    .sidebar {
-      align-self: start;
-      border: 1px solid white;
-      border-radius: 10px;
-      min-height: 100vh;
-      padding: 10px;
-      color: white;
-    }
-
-    .sidebar-section {
-      border: 1px solid;
-      border-radius: 10px;
-    }
-
-    .sidebar-section iframe {
-        width: 100%;
-        max-width: 100%;
-        display: block
-    }
-
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      column-gap: 10px;
-      row-gap: 10px;
-      border-radius: 5px;
-      margin: 10px;
-    }
-
-    .box {
-      border: 1px solid rgb(255, 255, 255);
-      border-radius: 5px;
-      
-    }
-
-    .reading {
-      border: 1px solid white;
-      background-color: rgba(81, 255, 249, 0.2);
-      grid-column: span 4;
-      padding: 2%;
-      
-    }
-
-    .calendar {
-      border-radius: 20px;
-      overflow: hidden;
-      grid-column: span 8;
-    }
-
-    .calendar iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .todos {
-      grid-column: span 4;
-      grid-row: span 2;
-    }
-
-    .todo-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 2% 10%;
-    }
-    
-    .bingo {
-      height: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-      grid-column: span 8;
-      grid-row: span 2;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .bingo-table {
-    width: 100%;
-    height: 100%;
-    flex-grow:1;
-    border-collapse:collapse;
-    table-layout:fixed;
-    color: white;
-    background: rgba(12, 219, 255, 0.342);
-    }
-
-    .bingo-table td {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid white;
-      color: rgb(255, 191, 0);
-      text-align: center;
-      padding: 10px 10px;
-    }
-    
-    .bingo-title {
-      font-size: 32px;
-      color: red;
-    }
-
-    .bingo-table td.completed { 
-      background: rgba(0, 255, 0, 0.226);
-    }
-
-    .notes {
-    grid-column: span 12;
-    display: flex;
-    flex-direction: column;
-    }
-
-    #notes{
-      font-family: Arial;
-      resize: none;
-      overflow: hidden;
-      background: rgb(54, 45, 82);
-      border: none;
-      margin: 5px;
-    }
-
-    .field {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 10px 0;
-      gap: 10px;
-    }
-
-    .field input {
-      flex: 1;
-      background: none;
-      border: none;
-      color: white;
-      text-align: center;
-      padding: 5px;
-    }
-
-    @media (max-width: 1400px) {
-      .right-sidebar {
-        display: none;
-      }
-
-      .page-layout {
-        grid-template-columns: 220px 1fr;
-      }
-    }
-
-    @media (max-width: 1000px) {
-      .left-sidebar {
-        display: none;
-      }
-
-      .page-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-  </style>
 </head>
 
 <body>
 
   <h1>Finn's Dashboard</h1>
-  <h2>Heading 2</h2>
-
-  <button onclick="alert('Website is working!')">
-    Test Website :D
-  </button>
-
-  <button onclick="alert('Poo Poo Pee Pee')">
-    Poo Poo Button
-  </button>
 
 <div class="page-layout">
 
   <aside class="sidebar left-sidebar">
-    Left Sidebar
-    <div class="sidebar-section">
-      <iframe data-testid="embed-iframe" style="border-radius:10px" src="https://open.spotify.com/embed/playlist/5MLWKSROGFf1icRdAtzPsy?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    <div class="card spotify">
+      <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/5MLWKSROGFf1icRdAtzPsy?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
+
+    <div class="card">
+      <h2>Quick Links:</h2>
+      <div>
+        <a href="https://moodle.nottingham.ac.uk/my/" style="color:red">Moodle Home Page</a>
+      </div>
+      <div>
+        <a href="https://finnwilson4.github.io/Finns-Personal-Dashboard/Meal-Planner.html" style="color:red">Meal Planner</a>
+      </div>
+      <div>
+        <a href="https://finnwilson4.github.io/Finns-Personal-Dashboard/Workout-Schedule" style="color:red">Workout Page</a>
+      </div>
+      </div>
   </aside>
 
   <div class="dashboard">
-      <div class="box reading">
-        <h2>Currently Reading</h2>
+      <div class="card reading">
+        <h2>Currently Reading:</h2>
 
-        <div class="field">
+        <div class="reading-row">
           <label>Book:</label>
           <input id="bookName">
         </div>
 
-        <div class="field">
+        <div class="reading-row">
           <label>Author:</label>
           <input id="author">
         </div>
 
-        <div class="field">
+        <div class="reading-row">
           <label>Date Started:</label>
           <input id="dateStarted" type="date">
         </div>
 
-        <div class="field">
+        <div class="reading-row">
           <label>Pages Read:</label>
           <input id="pages" type="number">
         </div>
       </div>
 
-      <div class="box calendar">
+      <div class="card calendar">
         <iframe
           src="https://timetreeapp.com/public_calendars/poopoo_peepee/embed/2weeks?calendar_name=false&frame_color=%232ecc87">
         </iframe>
       </div>
 
-      <div class="box todos">
+      <div class="card todos">
 
         <h2>Weekly To Dos</h2>
 
@@ -290,119 +85,119 @@
         </div>
       </div>
 
-      <div class="box bingo">
+      <div class="card bingo">
         <table class="bingo-table">
-          <tbody>
 
-            <tr>
-              <td>Make a Tirimasu</td>
-              <td>Climb Snowdon</td>
-              <td>Finish placement</td>
-              <td>Holiday with Em</td>
-            </tr>
+          <tr>
+            <td>Make a Tirimasu</td>
+            <td>Climb Snowdon</td>
+            <td>Finish placement</td>
+            <td>Holiday with Em</td>
+          </tr>
 
-            <tr>
-              <td>Make a Lasagna in Dish</td>
-              <td>Put £250 in LISA</td>
-              <td>Start Car and Hol Savings</td>
-              <td>Climb Ben Nevis</td>
-            </tr>
+          <tr>
+            <td>Make a Lasagna in Dish</td>
+            <td>Put £250 in LISA</td>
+            <td>Start Car and Hol Savings</td>
+            <td>Climb Ben Nevis</td>
+          </tr>
 
-            <tr>
-              <td>Climb Scafell Pike</td>
-              <td colspan="2" class="bingo-title">2026 Bingo</td>
-              <td>Learn a Guitar Song</td>
-            </tr>
+          <tr>
+            <td>Climb Scafell Pike</td>
+            <th colspan="2" class="bingo-title">2026 Bingo</th>
+            <td>Learn a Guitar Song</td>
+          </tr>
 
-            <tr>
-              <td>Read Schrodinger's Cat</td>
-              <td>cell 14</td>
-              <td>cell 15</td>
-              <td>cell 16</td>
-            </tr>
+          <tr>
+            <td>Read Schrodinger's Cat</td>
+            <td>cell 14</td>
+            <td>cell 15</td>
+            <td>cell 16</td>
+          </tr>
 
-            <tr>
-              <td>cell 17</td>
-              <td>cell 18</td>
-              <td>cell 19</td>
-              <td>cell 20</td>
-            </tr>
-
-          </tbody>
+          <tr>
+            <td>cell 17</td>
+            <td>cell 18</td>
+            <td>cell 19</td>
+            <td>cell 20</td>
+          </tr>
 
         </table>
       </div>
 
-      <div class="box notes">
-        <h2>Notes/ Ideas</h2>
-        <textarea class="box" id="notes"></textarea>
+      <div class="card meals">
+        <h2>Meal Planner</h2>
       </div>
 
-      <div class="box calendar">
-        <h2>ftykfgyl</h2>
+      <div class="card workout">
+        <h2>Workout Schedule</h2>
+      </div>
+
+      <div class="card notes">
+        <h2>Notes/ Ideas</h2>
+        <textarea class="box" id="notes"></textarea>
       </div>
   </div>
 
   <aside class="sidebar right-sidebar">
-    Right Sidebar
-  </aside>
+    <div class="card">
+      <h2>Important Dates Soon</h2>
+    </div>
+    <div class="card">
+      <h2>Quick Stats:</h2>
+      <div class="stats-row">
+          <label>>15 Pages Days:</label>
+          <input id="readingDays" type="number">
+      </div>
 
+      <div class="stats-row">
+          <label>Workout Days:</label>
+          <input id="workoutDays" type="number">
+      </div>
+
+      <div class="stats-row">
+          <label>>2 Pt Water Days:</label>
+          <input id="waterDays" type="number">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Progress</h2>
+      <div class="goal-row">
+        <label for="carAmount">Car:</label>
+        <input id="carAmount" type="number">
+      
+        <label for="carGoal">Goal:</label>
+        <input id="carGoal" type="number">
+      </div>
+
+      <progress id="carProgress" class="amount-progress">
+      </progress>
+
+      <div class="goal-row">
+        <label for="holidayAmount">Hoiday:</label>
+        <input id="holidayAmount" type="number">
+      
+        <label for="holidayGoal">Goal:</label>
+        <input id="holidayGoal" type="number">
+      </div>
+
+      <progress id="holidayProgress" class="amount-progress">
+      </progress>
+
+      <div class="goal-row">
+        <label for="readAmount">Books Read:</label>
+        <input id="readAmount" type="number">
+      
+        <label for="readGoal">Goal:</label>
+        <input id="readGoal" type="number">
+      </div>
+
+      <progress id="readProgress" class="amount-progress">
+      </progress>
+    </div>  
+  </aside>
+    
 </div>
 
-<script>
-
-const websiteInputs = [
-    "bookName",
-    "author",
-    "dateStarted",
-    "pages",
-    "notes",
-];
-
-// Saving Website Inputs
-websiteInputs.forEach(function(id) {
-
-    const element = document.getElementById(id);
-    element.value = localStorage.getItem(id) || "";
-
-    element.addEventListener("input", function() {
-        localStorage.setItem(id, element.value);
-    });
-
-});
-
-// Resizing and saving the size of notes box
-const notes = document.getElementById("notes");
-notes.value = localStorage.getItem("notes") || "";
-
-function resizeNotes() {
-    notes.style.height = "auto";
-    notes.style.height = notes.scrollHeight + "px";
-
-    localStorage.setItem("notesHeight", notes.style.height);
-  }
-
-notes.addEventListener("input", resizeNotes);
-resizeNotes();
-
-// Toggle Done on Bingo Table
-const bingoCells = document.querySelectorAll(".bingo-table td");
-
-bingoCells.forEach((cell, index) => {
-  const saved = localStorage.getItem("bingo-" + index);
-
-  if (saved === "true") {
-    cell.classList.add("completed");
-  }
-
-  cell.addEventListener("click", () => {
-    cell.classList.toggle("completed");
-
-    localStorage.setItem(
-      "bingo-" + index,
-      cell.classList.contains("completed")
-    );
-  });
-});
-
-</script>
+<script src="homepage-script.js"></script>
