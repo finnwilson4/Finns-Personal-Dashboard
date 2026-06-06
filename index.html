@@ -1,6 +1,7 @@
-
 <head>
   <link rel="stylesheet" href="dashboard-style.css">
+  <link rel="stylesheet" href="homepage-style.css">
+  <link rel="stylesheet" href="workout-page-style.css">
   <title>Dashboard Homepage</title>
 </head>
 
@@ -21,10 +22,10 @@
         <a href="https://moodle.nottingham.ac.uk/my/" style="color:red">Moodle Home Page</a>
       </div>
       <div>
-        <a href="https://finnwilson4.github.io/Finns-Personal-Dashboard/Meal-Planner.html" style="color:red">Meal Planner</a>
+        <a href="Meal-Planner.html" style="color:red">Meal Planner</a>
       </div>
       <div>
-        <a href="https://finnwilson4.github.io/Finns-Personal-Dashboard/Workout-Schedule" style="color:red">Workout Page</a>
+        <a href="Workout-Page.html" style="color:red">Workout Page</a>
       </div>
       </div>
   </aside>
@@ -129,8 +130,9 @@
         <h2>Meal Planner</h2>
       </div>
 
-      <div class="card workout">
+      <div class="card workout-widget">
         <h2>Workout Schedule</h2>
+        <div id="today-workout-card"></div>
       </div>
 
       <div class="card notes">
@@ -141,7 +143,7 @@
 
   <aside class="sidebar right-sidebar">
     <div class="card">
-      <h2>Important Dates Soon</h2>
+      <h2>Important Dates Soon:</h2>
     </div>
     <div class="card">
       <h2>Quick Stats:</h2>
@@ -200,4 +202,5 @@
     
 </div>
 
+<script src="shared-data.js"></script>
 <script src="homepage-script.js"></script>
