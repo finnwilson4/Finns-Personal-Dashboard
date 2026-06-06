@@ -1,0 +1,62 @@
+td {
+    color: var(--second-text);
+}
+
+#workout-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column: span 12;
+    gap: 10px;
+}
+
+.workout-types {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column: span 12;
+}
+
+.workout {
+    grid-column: span 6;
+}
+
+.workout-description-table {
+    width: 100%;
+    padding: 5px;
+}
+
+.workout-schedule {
+    grid-column: span 12;
+}
+
+.workout-schedule-table{
+    width: 100%;
+    table-layout: fixed;
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+.workout-schedule-table th{
+    border: 1px solid var(--border);
+    font-size: 20px;
+}
+
+ .workout-schedule-table td{
+    border: 1px solid var(--border);
+    height: 80px;
+ }
+.workout-select {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    text-align: center;
+    font-size: 18px;
+    color: red;
+    appearance: none;
+}
+
+@media (max-width: 1400px) {
+    .workout-select{
+        font-size: 14px
+    }
+}
