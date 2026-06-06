@@ -1,4 +1,4 @@
-
+// DEFINE WEBSITE HOMEPAGE INPUTS
 const websiteInputs = [
     "bookName",
     "author",
@@ -16,20 +16,24 @@ const websiteInputs = [
     "readGoal", "readAmount",
 ];
 
-// Saving Website Inputs
+
+
+// SAVE WEBSITE HOMEPAGE INPUTS
 function setupStorage(id) {
-  const element = document.getElementById(id);
+    const element = document.getElementById(id);
 
-  element.value = localStorage.getItem(id) || "";
+    element.value = localStorage.getItem(id) || "";
 
-  element.addEventListener("input", () => {
-    localStorage.setItem(id, element.value);
-  });
+    element.addEventListener("input", () => {
+        localStorage.setItem(id, element.value);
+    });
 }
 
 websiteInputs.forEach(setupStorage);
 
-// Resizing and saving the size of notes box
+
+
+// RESIZING AND SAVING THE SIZE OF NOTES BOX
 const notes = document.getElementById("notes");
 
 function resizeNotes() {
@@ -40,7 +44,9 @@ function resizeNotes() {
 notes.addEventListener("input", resizeNotes);
 resizeNotes();
 
-// Toggle Done on Bingo Table
+
+
+// TOGGLE DONE ON BINGO TABLE
 const bingoCells = document.querySelectorAll(".bingo-table td");
 
 bingoCells.forEach((cell, index) => {
@@ -60,11 +66,9 @@ bingoCells.forEach((cell, index) => {
   });
 });
 
-const goalInput = document.getElementById("carAmount");
-const currentInput = document.getElementById("currentAmount");
 
-const progressBar = document.getElementById("savingsProgress");
-const progressText = document.getElementById("savingsText");
+
+// PROGRESS TRACKER FOR GOALS
 
 function setupProgress(amountId, goalId, progressId) {
 
@@ -93,7 +97,44 @@ function setupProgress(amountId, goalId, progressId) {
     ["readAmount", "readGoal", "readProgress"],
 ].forEach(ids => setupProgress(...ids));
 
-goalInput.addEventListener("input", updateProgress);
-currentInput.addEventListener("input", updateProgress);
 
-updateProgress();
+
+// DISPLAY CURRENT DAY'S WORKOUT INFORMATION
+
+const dayIndex = (new Date().getDay() + 6) % 7;
+const today = days[dayIndex];
+
+const workoutName = localStorage.getItem(`workout-${today.toLowerCase()}`);
+
+const workout = workouts[workoutName];
+
+const container = document.getElementById("today-workout-card");
+
+// set workout data; rest day if no workout
+if (!workoutName || !workout) {
+    container.innerHTML = `
+        <div>
+            <h3>Today's Workout</h3>
+            <p>Rest Day</p>
+        </div>
+    `;
+} else {
+    let rows = "";
+    workout.exercises.forEach(exercise => {
+        rows += `
+            <tr>
+                <td style="width: 50%">${exercise.name}</td>
+                <td style="width: 15%">${exercise.weight}</td>
+                <td style="width: 35%">${exercise.muscle}</td>
+            </tr>
+        `;
+    });
+
+    container.innerHTML = `
+        <div class="workout">
+            <h3>Today's Workout: ${workout.name}</h3>
+
+            <table class="workout-description-table">${rows}</table>
+        </div>
+    `;
+}
