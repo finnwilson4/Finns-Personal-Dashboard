@@ -1,8 +1,45 @@
 <head>
-  <link rel="stylesheet" href="dashboard-style.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="meal-planner.css">
   <title>Meal Planner</title>
 </head>
 
 <body>
     <h1> Meal Planner</h1>
+
+    <div class="page-layout">
+        <aside class="sidebar left-sidebar">
+            <div class="card ingredients">
+                <h2>Ingredients:</h2>
+                <div id="ingredients-container"></div>
+            </div>
+        </aside>
+
+        <div class="dashboard">
+            
+            <div class="card meal-plan">
+                <h2>Meal Plan for Week</h2>
+
+                <div id="meal-plan-container"></div>
+            </div>
+
+            <div class="card meal-selection">
+                <h2 style="font-size: 30px">Meals</h2>
+            
+                <div id="meal-container"></div>
+            </div>
+        </div>
+        
+
+        <aside class="sidebar right-sidebar">
+            <div class="card">
+                <h2>Ingredients To Buy:</h2>
+
+                <div id="missing-ingredients-container"></div>
+            </div>
+        </aside>
+    </div>
 </body>
+
+<script src="shared-data.js"></script>
+<script src="meal-planner.js"></script>

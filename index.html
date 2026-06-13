@@ -1,7 +1,7 @@
 <head>
-  <link rel="stylesheet" href="dashboard-style.css">
-  <link rel="stylesheet" href="homepage-style.css">
-  <link rel="stylesheet" href="workout-page-style.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="homepage.css">
+  <link rel="stylesheet" href="workout-page.css">
   <title>Dashboard Homepage</title>
 </head>
 
@@ -12,22 +12,30 @@
 <div class="page-layout">
 
   <aside class="sidebar left-sidebar">
-    <div class="card spotify">
-      <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/5MLWKSROGFf1icRdAtzPsy?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
-
     <div class="card">
       <h2>Quick Links:</h2>
       <div>
         <a href="https://moodle.nottingham.ac.uk/my/" style="color:red">Moodle Home Page</a>
       </div>
+
       <div>
         <a href="Meal-Planner.html" style="color:red">Meal Planner</a>
       </div>
+
       <div>
         <a href="Workout-Page.html" style="color:red">Workout Page</a>
       </div>
+
+      <div>
+        <a href="uni-page.html" style="color:var(--input-text)">Uni Grade Tracker</a>
       </div>
+
+    </div>
+
+    <div class="card spotify">
+      <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/5MLWKSROGFf1icRdAtzPsy?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
+
   </aside>
 
   <div class="dashboard">
@@ -126,13 +134,18 @@
         </table>
       </div>
 
-      <div class="card meals">
+      <div class="card meals-widget">
         <h2>Meal Planner</h2>
+        <div id="today-meal-card"></div>
       </div>
 
       <div class="card workout-widget">
         <h2>Workout Schedule</h2>
         <div id="today-workout-card"></div>
+      </div>
+
+      <div class="card uni-widget">
+        <h2>Uni Grade Tracker</h2>        
       </div>
 
       <div class="card notes">

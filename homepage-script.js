@@ -17,7 +17,6 @@ const websiteInputs = [
 ];
 
 
-
 // SAVE WEBSITE HOMEPAGE INPUTS
 function setupStorage(id) {
     const element = document.getElementById(id);
@@ -29,47 +28,49 @@ function setupStorage(id) {
     });
 }
 
-websiteInputs.forEach(setupStorage);
-
+function initializeStorage() {
+    websiteInputs.forEach(setupStorage);
+}
 
 
 // RESIZING AND SAVING THE SIZE OF NOTES BOX
-const notes = document.getElementById("notes");
+function initializeNotes() {
+    const notes = document.getElementById("notes");
 
-function resizeNotes() {
-  notes.style.height = "auto";
-  notes.style.height = `${notes.scrollHeight}px`;
+    function resizeNotes() {
+        notes.style.height = "auto";
+        notes.style.height = `${notes.scrollHeight}px`;
+    }
+
+    notes.addEventListener("input", resizeNotes);
+    resizeNotes();
 }
-
-notes.addEventListener("input", resizeNotes);
-resizeNotes();
-
 
 
 // TOGGLE DONE ON BINGO TABLE
-const bingoCells = document.querySelectorAll(".bingo-table td");
+function initializeBingoTable() {
+    const bingoCells = document.querySelectorAll(".bingo-table td");
 
-bingoCells.forEach((cell, index) => {
-  const saved = localStorage.getItem(`bingo-${index}`);
+    bingoCells.forEach((cell, index) => {
+        const saved = localStorage.getItem(`bingo-${index}`);
 
-  if (saved === "true") {
-    cell.classList.add("completed");
-  }
+        if (saved === "true") {
+            cell.classList.add("completed");
+        }
 
-  cell.addEventListener("click", () => {
-    cell.classList.toggle("completed");
+        cell.addEventListener("click", () => {
+            cell.classList.toggle("completed");
 
-    localStorage.setItem(
-      `bingo-${index}`,
-      cell.classList.contains("completed")
-    );
-  });
-});
-
+            localStorage.setItem(
+                `bingo-${index}`,
+                cell.classList.contains("completed")
+            );
+        });
+    });
+}
 
 
 // PROGRESS TRACKER FOR GOALS
-
 function setupProgress(amountId, goalId, progressId) {
 
     const amountInput = document.getElementById(amountId);
@@ -91,50 +92,124 @@ function setupProgress(amountId, goalId, progressId) {
     updateProgress();
 }
 
-[
-    ["carAmount", "carGoal", "carProgress"],
-    ["holidayAmount", "holidayGoal", "holidayProgress"],
-    ["readAmount", "readGoal", "readProgress"],
-].forEach(ids => setupProgress(...ids));
+function initializeProgressBars() {
+    [
+        ["carAmount", "carGoal", "carProgress"],
+        ["holidayAmount", "holidayGoal", "holidayProgress"],
+        ["readAmount", "readGoal", "readProgress"],
+    ].forEach(ids => setupProgress(...ids));
+}
 
 
+// DISPLAY CURRENT DAY'S WORKOUT / TEA INFORMATION
+function getTodayName() {
+    const dayIndex = (new Date().getDay() + 6) % 7;
+    return days[dayIndex];
+}
 
-// DISPLAY CURRENT DAY'S WORKOUT INFORMATION
+function renderTodayWorkout() {
+    const today = getTodayName();
 
-const dayIndex = (new Date().getDay() + 6) % 7;
-const today = days[dayIndex];
+    const workoutName = localStorage.getItem(`workout-${today.toLowerCase()}`);
+    const workout = workouts[workoutName];
+    const workoutContainer = document.getElementById("today-workout-card");
 
-const workoutName = localStorage.getItem(`workout-${today.toLowerCase()}`);
-
-const workout = workouts[workoutName];
-
-const container = document.getElementById("today-workout-card");
-
-// set workout data; rest day if no workout
-if (!workoutName || !workout) {
-    container.innerHTML = `
-        <div>
-            <h3>Today's Workout</h3>
-            <p>Rest Day</p>
-        </div>
-    `;
-} else {
-    let rows = "";
-    workout.exercises.forEach(exercise => {
-        rows += `
-            <tr>
-                <td style="width: 50%">${exercise.name}</td>
-                <td style="width: 15%">${exercise.weight}</td>
-                <td style="width: 35%">${exercise.muscle}</td>
-            </tr>
+    if (!workoutName || !workout) {
+        workoutContainer.innerHTML = `
+            <div>
+                <h3>Today's Workout</h3>
+                <p>Rest Day</p>
+            </div>
         `;
-    });
+        return;
+    }
 
-    container.innerHTML = `
+    const rows = workout.exercises
+        .map(exercise => `
+            <tr>
+                <td style="width: 50%;">${exercise.name}</td>
+                <td style="width: 15%">${exercise.weight}</td>
+                <td style="width: 35%; text-align: center">
+                    ${exercise.muscle}
+                </td>
+            </tr>
+        `)
+        .join("");
+
+    workoutContainer.innerHTML = `
         <div class="workout">
             <h3>Today's Workout: ${workout.name}</h3>
-
-            <table class="workout-description-table">${rows}</table>
+            <table class="workout-description-table">
+                ${rows}
+            </table>
         </div>
     `;
 }
+
+function missingIngredientsForTea(meal) {
+
+    const stock = JSON.parse(localStorage.getItem("ingredientStock")) || {};
+    const missing = {};
+
+    for (const [ingredientKey, quantity] of Object.entries(meal.ingredients)) {
+
+        const owned = Number(stock[ingredientKey]) || 0;
+
+        if (owned < quantity) {missing[ingredientKey] = quantity - owned;}
+    }
+    return missing;
+}
+
+function renderTodayMeal() {
+    const today = getTodayName();
+
+    const mealsContainer = document.getElementById("today-meal-card");
+    const mealSchedule = JSON.parse(localStorage.getItem("mealSchedule")) || {};
+    const mealName = mealSchedule[today.toLowerCase()];
+    const meal = meals[mealName];
+
+    if (!meal) {
+        mealsContainer.innerHTML = "<p>No meal planned.</p>";
+        return;
+    }
+
+    let cost = 0;
+    const missing = missingIngredientsForTea(meal);
+    const missingHTML = Object.entries(missing)
+
+    .map(([ingredientKey, qty]) => {
+        const ingredient = ingredients[ingredientKey];
+        const packsNeeded = Math.ceil(qty / ingredient.number);
+        console.log(packsNeeded)
+
+        cost += ingredient.price * packsNeeded;
+
+        return `<li>${ingredient.name} x${qty}</li>`;
+    })
+    .join("");
+
+    mealsContainer.innerHTML = `
+        <div class="meal">
+            <h3>Today's Tea: ${meal.name}</h3>
+
+            <h3>Missing Ingredients</h3>
+            <ul>
+                ${missingHTML || "<li>All ingredients available</li>"}
+            </ul>
+
+            <h3>Price: £${cost.toFixed(2)}</h3>
+        </div>
+    `;
+
+}
+
+function init() {
+    initializeStorage();
+    initializeNotes();
+    initializeBingoTable();
+    initializeProgressBars();
+    renderTodayWorkout();
+    renderTodayMeal();
+}
+
+init();

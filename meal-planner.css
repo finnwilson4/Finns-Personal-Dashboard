@@ -1,0 +1,86 @@
+#meal-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column: span 12;
+    gap: 5px;
+}
+
+.ingredients {
+    padding: 0px;
+}
+
+.ingredient-category {
+    margin-bottom: 7px;
+}
+
+.ingredient-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 6px 0;
+}
+
+.ingredient-row label {
+    color: var(--second-text);
+}
+
+.ingredient-row input {
+    width: 50px;
+    text-align: center;
+    background: none;
+    border: none;
+    color: var(--input-text);
+}
+
+.meal-selection {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column: span 12;
+}
+
+.meal {
+    grid-column: span 3;
+}
+
+.meal-description-table{
+    width: 100%;
+    color: var(--second-text);
+}
+
+.meal-description-table td{
+    text-align: center;
+}
+
+.meal-plan {
+    grid-column: span 12;
+}
+
+.meal-plan-table {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+.meal-plan-table th{
+    border: 1px solid var(--border);
+    font-size: 20px;
+}
+
+.meal-plan-table td{
+    border-left: 1px solid var(--border);
+    height: 80px;
+ }
+
+.meal-plan-select {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    text-align: center;
+    font-size: 18px;
+    color: var(--input-text);
+    appearance: none;
+}

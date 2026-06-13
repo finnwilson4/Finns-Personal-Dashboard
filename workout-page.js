@@ -1,4 +1,3 @@
-
 const container = document.getElementById("workout-container");
 const scheduleContainer = document.getElementById("schedule-container");
 
@@ -65,14 +64,7 @@ scheduleContainer.innerHTML = `
         <tr>${selects}</tr>
     </table>
 `;
-console.log("Script loaded");
-document.querySelectorAll(".workout-select").forEach(select => {
-    console.log("Select found:", select);
 
-    select.addEventListener("change", () => {
-        console.log("Changed:", select.dataset.day, select.value);
-    });
-});
 // Save Selected Options
 document.querySelectorAll(".workout-select").forEach(select => {
     select.addEventListener("change", () => {
@@ -93,23 +85,4 @@ document.querySelectorAll(".workout-select").forEach(select => {
     if (savedWorkout !== null) {
         select.value = savedWorkout;
     }
-});
-
-document.querySelectorAll(".workout-select").forEach(select => {
-
-    select.addEventListener("change", () => {
-
-        const schedule =
-            JSON.parse(localStorage.getItem("workoutSchedule")) || {};
-
-        const day = select.dataset.day;
-        schedule[day] = select.value;
-
-        localStorage.setItem(
-            "workoutSchedule",
-            JSON.stringify(schedule)
-        );
-
-    });
-
 });
