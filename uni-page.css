@@ -1,0 +1,82 @@
+.grade-summary {
+    grid-column: span 12;
+}
+
+.grade-summary table {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-collapse: collapse;
+}
+
+.grade-summary table th {
+    border: 1px solid var(--border);
+    text-align: center;
+    color: var(--text);
+}
+
+.grade-summary table td {
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    text-align: center;
+    color: var(--second-text);
+}
+
+.course-progress {
+    width: 100%;
+    height: 22px;
+    background: var(--panel);
+    margin-top: 2px;
+    border: 1px solid var(--border);
+}
+
+.uni-timetable {
+    width: 100%;
+    grid-column: span 12;
+    border: 1px solid var(--border);
+    border-collapse: collapse;
+    table-layout: fixed;
+
+}
+
+.uni-timetable th {
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.uni-timtable td {
+    border: 1px solid var(--border);
+    color: var(--second-text);
+}
+
+.year4 {
+    grid-column: span 6;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+#year4-sliders {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.sliders {
+    grid-column: span 6;
+}
+
+.slider-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.slider-row {
+    width: 100%;
+}
+
+.slider-row label{
+    text-align: left;
+    font-size: 12px;
+    margin: none;
+}
+
+.slider-row input[type="range"] {
+    width: 100%;
+}
