@@ -8,7 +8,10 @@
 
 <div class="page-layout">
     <aside class="sidebar left-sidebar">
-
+        <div class="card year4">
+            <h2>Year 4 Simulation Sliders</h2>
+            <div id="year4-sliders"></div>
+        </div>
     </aside>
 
     <div class="dashboard">
@@ -20,19 +23,29 @@
         </div>
 
         <div class="card uni-timetable">
+            <h2>Timetable</h2>
             <div id="timetable"></div>
         </div>
 
-        <div class="card year4">
-            <h2>Year 4 Sliders</h2>
-            <div id="year4-sliders"></div>
+        <div class="card modules">
+            <h2>Modules</h2>
+            <div id="module-container"></div>
         </div>
+
+        
     </div>
 
     <aside class="sidebar right-sidebar">
-
+        <div class="card">
+            <h2>Y4 Targets:</h2>
+            <div id="y4-targets-container"></div>
+        </div>
+        <div class="card">
+            <h2>Approaching Deadlines</h2>
+            <div id="approaching-deadlines-container"></div>
+        </div>
     </aside>
 </div>
 
 <script src="shared-data.js"></script>
-<script src="uni-page.js"></script>
+<script type="module" src="uni-page.js"></script>

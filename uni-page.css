@@ -48,18 +48,69 @@
     color: var(--second-text);
 }
 
-.year4 {
-    grid-column: span 6;
-    grid-template-columns: repeat(12, 1fr);
+.modules {
+    display: grid;
+    grid-column: span 12;
+}
+
+#module-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.module-description {
+    width: calc(50% - 10px);
+    margin: 2.5px;
+    
+}
+
+.module-description h3{
+    margin: 0;
+}
+
+.module-description h4{
+    margin: 0;
+}
+
+.module-description textarea {
+    width: 100%;
+    background: none;
+    resize: vertical;
+    border: none;
+}
+
+.urgent { color: red; }
+.close { color: orange; }
+.safe { color: limegreen; }
+
+.module-assignment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.module-assignment-table td {
+    border-bottom: 1px solid;
+}
+.module-assignment-table input{
+    font-size: 14px;
+    text-align: center;
+    background: none;
+    border: none;
+}
+
+.year4 h2 {
+    padding: 5px;
+}
+
+#year4-sliders h3 {
+    margin: 0px;
 }
 
 #year4-sliders {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-}
-
-.sliders {
-    grid-column: span 6;
+    gap: 5px;
 }
 
 .slider-group {
@@ -79,4 +130,19 @@
 
 .slider-row input[type="range"] {
     width: 100%;
+}
+
+.targets-table {
+    width: 100%;
+    font-size: 16px;
+    color: var(--second-text);
+}
+
+.targets-table td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.deadlineWeek {
+    margin: 5px;
 }

@@ -188,7 +188,7 @@ const ingredients = {
         name: "Peas",
         number: 6,
         category: "Freezer",
-        price: 1.50,
+        price: 1,
     },
 
     chicken: {
@@ -209,7 +209,7 @@ const ingredients = {
         name: "Mince",
         number: 1,
         category: "Fridge",
-        price: 2.5,
+        price: 3.25,
     },
 
     halloumi: {
@@ -259,21 +259,21 @@ const ingredients = {
         name: "Baked Beans",
         number: 1,
         category: "Cupboard",
-        price: 0.46,
+        price: 0.27, // ALDI
     },
 
     chickpeas: {
         name: "Chickpeas",
         number: 1,
         category: "Cupboard",
-        price: 0.60,
+        price: 0.41,
     },
 
     tinnedTom: {
         name: "Tinned Toms",
         number: 1,
         category: "Cupboard",
-        price: 0.90,
+        price: 0.47,
     },
 
     rice: {
@@ -301,7 +301,7 @@ const ingredients = {
         name: "Sweet Potato",
         number: 1,
         category: "Cupboard",
-        price: 0.70,
+        price: 0.69,
     },
 
     tortilla: {
@@ -322,7 +322,7 @@ const ingredients = {
         name: "Pasta Sauce",
         number: 3,
         category: "Cupboard",
-        price: 0.90,
+        price: 0.69, // ALDI
     },
 
     // Freezer
@@ -342,9 +342,9 @@ const ingredients = {
 
     chips: {
         name: "Chips",
-        number: 4,
+        number: 5,
         category: "Freezer",
-        price: 1.20,
+        price: 1.89,
     },
 
     garlicBread: {
@@ -423,7 +423,6 @@ const meals = {
 
         ingredients: {
             onion: 1,
-            pepper: 1,
             mince: 1,
             tinnedTom: 1,
             chips: 1,

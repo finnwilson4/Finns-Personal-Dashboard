@@ -29,7 +29,7 @@ function renderMeals() {
         for (const [ingredientKey, quantity] of Object.entries(meal.ingredients)) {
 
             const ingredient = ingredients[ingredientKey];
-            totalCost += (ingredient.price * quantity / meal.portions);
+            totalCost += ((ingredient.price  * quantity / ingredient.number) / meal.portions);
 
             rows += `
                 <tr>
@@ -43,7 +43,7 @@ function renderMeals() {
         mealsContainer.innerHTML += `
             <div class="card meal">
                 <h2>${meal.name}</h2>
-                ${Object.keys(meal.ingredients).length < 3 ? `<p>Quick Meal</p>` : `
+                ${Object.keys(meal.ingredients).length < 3 ? `<p>Quick Meal</p> <h3>Total Cost (per portion): £${totalCost.toFixed(2)}</h3>` : `
                     <table class="meal-description-table">${rows}</table>
                     <h3>Portions: ${meal.portions}</h3>
                     <h3>Total Cost (per portion): £${totalCost.toFixed(2)}</h3>
@@ -203,7 +203,7 @@ function updateRequiredIngredients() {
                 <div class="ingredient-row">
                     <label>${ingredient.name}</label>
                     <label>${(packsNeeded * ingredient.price).toFixed(2)}</label>
-                    <span>x${quantity}</span>
+                    <span>x${packsNeeded} (x${quantity})</span>
                 </div>
             `;
         }
