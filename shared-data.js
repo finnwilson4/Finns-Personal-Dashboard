@@ -524,3 +524,80 @@ const meals = {
     },
 };
 
+const financeState = {
+
+    balances: {
+        Halifax: 0,
+        Spending: 100,
+        Car: 200.02,
+        Holiday: 300,
+        Savings: 5749.47,
+        Bills: 0,
+    },
+
+    monthlyOutgoings: {
+        Rent: {
+            name: "Rent",
+            amount: -400,
+            type: "monthly",
+            day: 1
+        },
+
+        Spotify: {
+            name:"Spotify",
+            amount: -5.99,
+            type: "monthly",
+            day: 17
+        },
+
+        Apple: {
+            name: "Apple",
+            amount: -2.99,
+            type: "monthly",
+            day: 1,
+        },
+
+        Food: {
+            amount: -100,
+            type: "weekly"
+        },
+
+        Other: {
+            amount: -100,
+            type: "weekly"
+        }
+    },
+    
+    pay: 32 * 12.81,
+
+    oneOffExpenses: [ // need to minus one off the month index
+    {
+        date: new Date(2026, 7, 7),
+        amount: -360
+    },
+    {
+        date: new Date(2026, 8, 21),
+        amount: 1548.69
+    },
+    {
+        date: new Date(2027, 0, 11),
+        amount: 1548.69
+    },
+    {
+        date: new Date(2027, 3, 26),
+        amount: 1595.62
+    }
+    ],
+
+};
+
+const BANK_HOLIDAYS = [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-06",
+    "2026-05-04",
+    "2026-05-25",
+    "2026-08-31",
+    "2026-12-25",
+    "2026-12-28"
+];
