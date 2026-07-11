@@ -1,0 +1,43 @@
+<head>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="finances.css">
+  <title>Finances</title>
+</head>
+
+<h1>Finances</h1>
+
+<div class="page-layout">
+  <aside class="sidebar left-sidebar">
+
+  </aside>
+  
+  <div class="dashboard">
+    <div class="card balance-breakdown">
+      <div id="balance-breakdown"></div>
+      <div id="outgoings-bar"></div>
+    </div>
+
+    <div class="card out-sliders">
+      <div id="expense-sliders"></div>
+    </div>
+
+    <div class="card year-view">
+      <h2>Year Forecast</h2>
+      <canvas id="forecast-chart-year"></canvas>
+      <div id="year-text"></div>
+    </div>
+    <div class="card month-view">
+      <h2>Month Forecast</h2>
+      <canvas id="forecast-chart-month"></canvas>
+      <div id="month-text"></div>
+    </div>
+  </div>
+
+  <aside class="sidebar right-sidebar">
+
+  </aside>
+</div>
+
+<script src="shared-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="finances.js"></script>

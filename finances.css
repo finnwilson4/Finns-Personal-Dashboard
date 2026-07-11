@@ -1,0 +1,171 @@
+.balance-breakdown {
+    grid-column: span 12;
+}
+
+.balance-section {
+    border: 1px solid;
+}
+
+.balance-bar {
+    width: 100%;
+    height: 12px;
+    margin-bottom: 1px;
+    overflow: hidden;
+}
+
+.balance-fill {
+    height: 100%;
+    background: seagreen;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.balance-label {
+    color: #f3f4f6c4;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.balance-input {
+    width: 80px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    color: brgba(0, 0, 0, 0.789)
+}
+
+.total-section {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border: 1px solid;
+    border-top: none;
+}
+
+.total-text {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.total-bar {
+    height: 35px;
+    background: seagreen;
+}
+
+.total-fill {
+    width: 100%;
+    height: 100%;
+}
+
+.outgoings-bar {
+    display: flex;
+    width: 100%;
+    height: 25px;
+    overflow: hidden;
+    background: #ddd;
+    border: 1px solid;
+    margin-top: 15px;
+}
+
+.outgoing-section {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.outgoing-section label {
+    font-size: 11px;
+    vertical-align: middle;
+}
+
+.bar-axis {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.axis-tick {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    flex: 1;
+}
+
+.axis-tick:first-child {
+    align-items: flex-start;
+}
+
+.axis-tick:last-child {
+    align-items: flex-end;
+}
+
+.tick-line {
+    width: 1px;
+    height: 6px;
+    background: black;
+}
+
+.pay-bar {
+    width: 100%;
+    height: 25px;
+    border: 1px solid;
+    border-top: none;
+    box-sizing: border-box;
+}
+
+.pay-bar label {
+    font-size: 11px;
+}
+
+.pay-fill {
+    height: 100%;
+    background: turquoise;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.out-sliders {
+    grid-column: span 12;
+}
+
+.slider-row label {
+    font-size: 12px;
+}
+.slider-row input {
+    width: 100%;
+}
+
+.year-view {
+    grid-column: span 12;
+}
+
+.month-view {
+    grid-column: span 12;
+}
+
+.stats {
+    display: flex;
+    gap: 1rem;
+}
+
+.stat {
+    flex: 1;
+    padding: 5px;
+    border-radius: 8px;
+    background: #808080ba;
+}
+
+.label {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.value {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
