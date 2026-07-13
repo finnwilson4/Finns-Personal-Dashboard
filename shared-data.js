@@ -535,6 +535,12 @@ const financeState = {
         Bills: 0,
     },
 
+    payAllocations: {
+        Car: 40,
+        Holiday: 40,
+        Spending: 200,
+    },
+
     monthlyOutgoings: {
         Rent: {
             name: "Rent",

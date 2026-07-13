@@ -1,9 +1,11 @@
 containers = {
+    payAllocationContainer: document.querySelector("#pay-allocation"),
     balanceContainer: document.querySelector("#balance-breakdown"),
     outgoingsContainer: document.querySelector("#outgoings-bar"),
     sliderContainer: document.querySelector("#expense-sliders"),
     monthTextContainer: document.querySelector("#month-text"),
     yearTextContainer: document.querySelector("#year-text"),
+    dayTextContainer: document.querySelector("#day-text"),
 }
 
 const financeDays = 365
@@ -66,6 +68,34 @@ function sameDay(a, b) {
     );
 }
 
+function generatePayAllocationInputs() {
+
+    let html = '<div>';
+
+    Object.entries(financeState.payAllocations).forEach(([name, value]) => {
+    html += `
+            <div class="allocation">
+                <span class="allocation-label">${name}</span>
+
+                <input
+                    type="number"
+                    value="${value}"
+                    onchange="updateAllocations('${name}', this.value)"
+                    class="allocation-input"
+                >
+                
+            </div>
+        `;
+    });
+    containers.payAllocationContainer.innerHTML = html;
+}
+
+function updateAllocations(allocation, value) {
+    financeState.payAllocations[allocation] = Number(value);
+    generatePayAllocationInputs();
+    updateForecastChart();
+}
+
 function simulate(financeState) {
 
     const startBalance = Object.values(financeState.balances)
@@ -88,21 +118,23 @@ function simulate(financeState) {
 
         const today = dates[i];
         const isPayDay = payDates.some(payDay => sameDay(today, payDay));
-        if (i < 46) {
-            pay = 70*12.81;
-        } else {
-            pay = financeState.pay
-        }
+        const pay = i < 46 ? 70 * 12.81 : financeState.pay;
         
         // console.log("Pay:", i,":", pay)
         if (isPayDay) {
             dailyChange[i] += pay;
             changes.Bills[i] += monthlyFixed;
-            changes.Spending[i] += 200;
-            changes.Car[i] += 40;
-            changes.Holiday[i] += 40;
-            changes.Savings[i] += (pay);
-            changes.Savings[i] -= (monthlyFixed + 200 + 40 + 40);
+
+            Object.entries(financeState.payAllocations).forEach(([account, amount]) => {
+                if (changes[account]) {
+                    changes[account][i] += Number(amount);
+                }
+            });
+
+            const allocated = Object.values(financeState.payAllocations)
+            .reduce((sum, value) => sum + Number(value), 0);
+
+            changes.Savings[i] += pay - monthlyFixed - allocated;
         }
 
         if (isPayDay && i < 50)
@@ -325,6 +357,7 @@ const forecastChartMonth= new Chart(ctxM, {
 });
 
 function updateForecastChart () {
+    saveFinances();
     const result = simulate(financeState);
 
     const labels = dates.map(date =>
@@ -460,8 +493,8 @@ function generateOutgoingsBar() {
 
     const expenses = Object.entries(financeState.monthlyOutgoings).sort((a, b) => Math.abs(b[1].amount) - Math.abs(a[1].amount));
     const outTotal = expenses.reduce((sum, [, info]) => {return sum + Math.abs(info.amount);}, 0);
-    const maxOut = Math.max(outTotal*1.02, 700)
-
+    const maxOut = outTotal
+    
     const colours = [
         "#4caf50",
         "#2196F3",
@@ -497,7 +530,7 @@ function generateOutgoingsBar() {
                         <label>Pay: £${financeState.pay.toFixed(2)}</label>
                     </div>
                 </div>`
-    outHtml += `${createAxis(outTotal, 100)}`;
+    outHtml += `${createAxis(maxOut, 100)}`;
 
     containers.outgoingsContainer.innerHTML = outHtml;
 
@@ -506,13 +539,12 @@ function generateOutgoingsBar() {
 function createAxis(maxValue, step) {
     let html = '<div class="bar-axis">';
 
-    const divisions = maxValue/step
-    for (let i = 0; i <= divisions; i++) {
-        const value = Math.round(((maxValue / divisions) * i)/100)*100;
+    for (let value = 0; value <= maxValue; value += step) {
+        const left = (value / maxValue) * 100;
         html += `
-            <div class="axis-tick">
+            <div class="axis-tick" style="left:${left}%;">
                 <div class="tick-line"></div>
-                <span>£${Math.round(value)}</span>
+                <span>£${value}</span>
             </div>
         `;
     }
@@ -547,22 +579,70 @@ function generateExpenseSliders() {
 
             </div>
         `;
+
+        
     });
 
     containers.sliderContainer.innerHTML = html;
+    generateDayText();
 }
 
+function generateDayText() {
+
+    const reuslt = simulate(financeState)
+    const monOut = Object.values(financeState.monthlyOutgoings)
+        .reduce((sum, expense) => {
+            return sum + Math.abs(expense.amount);
+        }, 0); // Comes out as a positive number
+
+    const dailyOut = ((monOut +
+                    financeState.monthlyOutgoings.Rent.amount
+                    + financeState.monthlyOutgoings.Spotify.amount
+                    + financeState.monthlyOutgoings.Apple.amount)
+                    *12/365).toFixed(2)
+
+    let html = `
+            <div class="daily-text">
+                <span>Daily Out:</span>
+                <label>£${dailyOut}</label>
+            </div>
+        `
+
+    containers.dayTextContainer.innerHTML = html;
+}
 function updateWeeklyExpense(name, value) {
 
     financeState.monthlyOutgoings[name].amount = -Number(value);
 
     document.querySelector(`#${name}-value`).textContent = value;
 
+    generateDayText();
     generateOutgoingsBar();
     updateForecastChart();
 }
 
+function saveFinances() {
+    localStorage.setItem("financeState", JSON.stringify(financeState));
+}
+
+function loadFinances() {
+    const saved = localStorage.getItem("financeState");
+
+    if (!saved) return;
+
+    const loaded = JSON.parse(saved, (key, value) => {
+        if (key === "date") {
+            return new Date(value);
+        }
+        return value;
+    });
+
+    Object.assign(financeState, loaded);
+}
+
 function initializeFinancePage() {
+    loadFinances();
+    generatePayAllocationInputs();
     generateBalances()
     generateOutgoingsBar()
     generateExpenseSliders();
