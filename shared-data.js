@@ -526,6 +526,12 @@ const meals = {
 
 const financeState = {
 
+    workSchedule : Array.from({ length: 35 }, () => ({
+        worked: false,
+        start: "09:00",
+        end: "17:00"
+    })),
+
     balances: {
         Halifax: 0,
         Spending: 100,
@@ -574,6 +580,7 @@ const financeState = {
         }
     },
     
+    hourlyRate: 12.81,
     pay: 32 * 12.81,
 
     oneOffExpenses: [ // need to minus one off the month index

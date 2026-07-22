@@ -178,8 +178,6 @@
     
 }
 
-
-
 .value {
     font-size: 1.5rem;
     font-weight: bold;
@@ -187,4 +185,52 @@
 
 .daily-text label{
     font-weight: bold;
+}
+
+.work-schedule {
+    grid-column: span 12;
+}
+
+.work-schedule table {
+    border: 1px solid;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.work-schedule th {
+    border: 1px solid;
+}
+
+.work-schedule td {
+    border: 1px solid;
+}
+
+.work-table td.not-worked {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.work-table td.worked {
+    vertical-align: top;
+}
+
+.work-table select {
+    background: none;
+    border: none;
+}
+
+.work-table td.worked input,
+.work-table td.worked select {
+    display: block;
+    width: 90%;
+    text-align: center;
+    margin-left: 4px;
+    margin-right: 4px;
+    border: none;
+    background: rgba(158, 189, 172, 0.173)
+}
+
+.pay-text {
+    margin-top: 5px;
+    background: rgba(158, 189, 172, 0.173);
 }

@@ -7,14 +7,22 @@
 <h1>Finances</h1>
 
 <div class="page-layout">
+  
   <aside class="sidebar left-sidebar">
     <div class="card pay-allocation">
+      <h2><u>Pay Allocation</u></h2>
       <div id="pay-allocation"></div>
     </div>
   </aside>
   
   <div class="dashboard">
+    <div class="card work-schedule">
+      <h2><u>Work Schdeule</u></h2>
+      <div id="work-schedule"></div>
+    </div>
+
     <div class="card balance-breakdown">
+      <h2><u>Balances</u></h2>
       <div id="balance-breakdown"></div>
       <div id="outgoings-bar"></div>
     </div>
@@ -25,12 +33,13 @@
     </div>
 
     <div class="card year-view">
-      <h2>Year Forecast</h2>
+      <h2><u>Year Forecast</u></h2>
       <canvas id="forecast-chart-year"></canvas>
       <div id="year-text"></div>
     </div>
+
     <div class="card month-view">
-      <h2>Month Forecast</h2>
+      <h2><u>Month Forecast</u></h2>
       <canvas id="forecast-chart-month"></canvas>
       <div id="month-text"></div>
     </div>
@@ -39,6 +48,8 @@
   <aside class="sidebar right-sidebar">
 
   </aside>
+
+  
 </div>
 
 <script src="shared-data.js"></script>

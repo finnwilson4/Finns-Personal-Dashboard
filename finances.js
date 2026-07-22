@@ -1,4 +1,5 @@
 containers = {
+    workScheduleContainer: document.querySelector("#work-schedule"),
     payAllocationContainer: document.querySelector("#pay-allocation"),
     balanceContainer: document.querySelector("#balance-breakdown"),
     outgoingsContainer: document.querySelector("#outgoings-bar"),
@@ -68,6 +69,130 @@ function sameDay(a, b) {
     );
 }
 
+financeState.workSchedule = Array.from({ length: 35 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+
+    return {
+        date,
+        worked: false,
+        start: "09:00",
+        end: "18:00"
+    };
+});
+
+function generateWorkSchedule() {
+    const weeks = 5;
+    const daysPerWeek = 7;
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const totalHours = calculateTotalHours();
+    const totalPay = totalHours * financeState.hourlyRate;
+
+    let html = '<table class="work-table">';
+    
+    dayNames.forEach(day => {
+        html += `<th>${day}</th>`;
+    });
+
+    for (let week = 0; week < weeks; week++) {
+
+        html += "<tr>";
+
+        for (let day = 0; day < daysPerWeek; day++) {
+
+            const index = week * daysPerWeek + day;
+            const workDay = financeState.workSchedule[index];
+
+            html += `
+                <td class="${workDay.worked ? "worked" : "not-worked"}">
+
+                <select onchange="updateWorkDay(${index}, 'worked', this.value)">
+                    <option value="false" ${!workDay.worked ? "selected" : ""}>N/A</option>
+                    <option value="true" ${workDay.worked ? "selected" : ""}>Worked</option>
+                </select>
+
+                ${
+                    workDay.worked
+                        ? `
+                            <input
+                                type="time"
+                                value="${workDay.start}"
+                                onchange="updateWorkDay(${index}, 'start', this.value)"
+                            > 
+
+                            <input
+                                type="time"
+                                value="${workDay.end}"
+                                onchange="updateWorkDay(${index}, 'end', this.value)"
+                            >
+                        `
+                        : ""
+                }
+
+            </td>
+            `;
+        }
+        html += "</tr>";
+    }
+
+    html += "</table>";
+    html += `
+        <div class="pay-text">
+            <div class="stats">
+                <div class="stat">
+                    <span>Hours Worked:</span>
+                    <strong>${totalHours.toFixed(2)}</strong>
+                </div>
+
+                <div class="stat">
+                    <span>Expected Pay:</span>
+                    <strong>£${totalPay.toFixed(2)}</strong>
+                </div>
+            </div>
+        </div>
+        `
+    
+    containers.workScheduleContainer.innerHTML = html;
+}
+
+function updateWorkDay(index, field, value) {
+
+    if (field === "worked") {
+        financeState.workSchedule[index].worked = value === "true";
+    } else {
+        financeState.workSchedule[index][field] = value;
+    }
+
+    saveFinances();
+    generateWorkSchedule();
+    updateForecastChart();
+}
+
+function hoursWorked(start, end) {
+
+    const [sh, sm] = start.split(":").map(Number);
+    const [eh, em] = end.split(":").map(Number);
+
+    const startMinutes = sh * 60 + sm;
+    const endMinutes = eh * 60 + em;
+
+    const hours = ((endMinutes - startMinutes) / 60) <= 4 ? ((endMinutes - startMinutes) / 60) : ((endMinutes - startMinutes) / 60)-1;
+
+    return (hours)
+}
+
+function calculateTotalHours() {
+
+    return financeState.workSchedule.reduce((total, day) => {
+
+        if (!day.worked) return total;
+
+        return total + hoursWorked(day.start, day.end);
+
+    }, 0);
+
+}
+
 function generatePayAllocationInputs() {
 
     let html = '<div>';
@@ -113,13 +238,15 @@ function simulate(financeState) {
     Object.keys(financeState.balances).forEach(account => {
         changes[account] = new Array(financeDays).fill(0);
     });
-    
-    for (let i = 0; i < dates.length; i++) {
+    const firstPayDay = payDates.find(payDay => payDay >= payDates[6]);
+    const secondPayDay = payDates.find(payDay => payDay >= payDates[7]);
 
+    for (let i = 0; i < dates.length; i++) {
+        
         const today = dates[i];
         const isPayDay = payDates.some(payDay => sameDay(today, payDay));
-        const pay = i < 46 ? 70 * 12.81 : financeState.pay;
-        
+        const pay = (sameDay(today, firstPayDay) || sameDay(today, secondPayDay)) ? calculateTotalHours()*financeState.hourlyRate : financeState.pay;
+
         // console.log("Pay:", i,":", pay)
         if (isPayDay) {
             dailyChange[i] += pay;
@@ -231,12 +358,13 @@ function simulate(financeState) {
         changes,
         forecast,
         difference,
+        dates,
     };
 
 }
 
 const ctxY = document.getElementById("forecast-chart-year");
-const ctxM = document.getElementById("forecast-chart-month")
+const ctxM = document.getElementById("forecast-chart-month");
 const result = simulate(financeState);
 const forecastChartYear= new Chart(ctxY, {
     type: "line",
@@ -610,6 +738,7 @@ function generateDayText() {
 
     containers.dayTextContainer.innerHTML = html;
 }
+
 function updateWeeklyExpense(name, value) {
 
     financeState.monthlyOutgoings[name].amount = -Number(value);
@@ -642,6 +771,7 @@ function loadFinances() {
 
 function initializeFinancePage() {
     loadFinances();
+    generateWorkSchedule();
     generatePayAllocationInputs();
     generateBalances()
     generateOutgoingsBar()
