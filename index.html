@@ -36,10 +36,6 @@
 
     </div>
 
-    <div class="card spotify">
-      <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/5MLWKSROGFf1icRdAtzPsy?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
-
   </aside>
 
   <div class="dashboard">
@@ -125,7 +121,7 @@
             <td>Read Schrodinger's Cat</td>
             <td>Read 12 Books</td>
             <td>Make Meringues</td>
-            <td>cell 16</td>
+            <td>Add To Scrapbook</td>
           </tr>
 
           <tr>
@@ -149,7 +145,8 @@
       </div>
 
       <div class="card uni-widget">
-        <h2>Uni Grade Tracker</h2>        
+        <h2>Uni Grade Tracker</h2>
+        <div id="uni-summary"></div>        
       </div>
 
       <div class="card notes">
@@ -184,7 +181,7 @@
       <h2>Progress</h2>
       <div class="goal-row">
         <label for="carAmount">Car:</label>
-        <input id="carAmount" type="number">
+        <span id="carAmount" class="stat-amount"></span>
       
         <label for="carGoal">Goal:</label>
         <input id="carGoal" type="number">
@@ -195,7 +192,7 @@
 
       <div class="goal-row">
         <label for="holidayAmount">Hoiday:</label>
-        <input id="holidayAmount" type="number">
+        <span id="holidayAmount" class="stat-amount"></span>
       
         <label for="holidayGoal">Goal:</label>
         <input id="holidayGoal" type="number">

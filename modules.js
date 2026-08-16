@@ -30,7 +30,7 @@ export const modules = [
             ]
         },
         {
-            name: "Astro Research Techs in  4020",
+            name: "Astro Research Techs  4020",
             lecturer: "Name Here",
             weight: 20/120,
             lectureDays: [

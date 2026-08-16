@@ -534,17 +534,19 @@ const financeState = {
 
     balances: {
         Halifax: 0,
-        Spending: 100,
-        Car: 200.02,
-        Holiday: 300,
-        Savings: 5749.47,
+        Spending: 0,
+        Car: 0,
+        Holiday: 0,
+        Gifts: 0,
+        Savings: 0,
         Bills: 0,
     },
 
     payAllocations: {
-        Car: 40,
-        Holiday: 40,
-        Spending: 200,
+        Car: 0,
+        Holiday: 0,
+        Gifts: 0,
+        Spending: 0,
     },
 
     monthlyOutgoings: {
@@ -569,6 +571,13 @@ const financeState = {
             day: 1,
         },
 
+        Storage: {
+            name: "Storage",
+            amount: -76,
+            type: "monthly",
+            day: 20,
+        },
+
         Food: {
             amount: -100,
             type: "weekly"
@@ -584,10 +593,7 @@ const financeState = {
     pay: 32 * 12.81,
 
     oneOffExpenses: [ // need to minus one off the month index
-    {
-        date: new Date(2026, 7, 7),
-        amount: -360
-    },
+
     {
         date: new Date(2026, 8, 21),
         amount: 1548.69

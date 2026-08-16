@@ -151,6 +151,11 @@ text-align: center;
     background-color: var(--panel);
 }
 
+.stat-amount {
+    color: var(--input-text);
+    font-size: 13px;
+}
+
 .goal-row {
 display: flex;
 justify-content: space-between;

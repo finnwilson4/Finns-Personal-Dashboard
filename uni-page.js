@@ -93,7 +93,7 @@ function renderYear4Sliders() {
     elements.slidersContainer.innerHTML = modules.map((mod, mIndex) => `
         <div class="card">
             <h3>${mod.name}</h3>
-
+            
             <div class="slider-group">
                 ${mod.components
                     .map((c, cIndex) => ({ c, cIndex }))

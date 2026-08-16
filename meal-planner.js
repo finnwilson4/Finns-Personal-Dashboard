@@ -1,5 +1,3 @@
-// DEFINE CONSTANTS
-
 // Containers
 const mealsContainer = document.getElementById("meal-container");
 const mealPlanContainer = document.getElementById("meal-plan-container");

@@ -1,3 +1,9 @@
+containers = {
+    workoutContainer: document.querySelector("#today-workout-card"),
+    uniContainer: document.querySelector("#uni-summary"),
+    financeContainer: document.querySelector("#finances-summary"),
+}
+
 // DEFINE WEBSITE HOMEPAGE INPUTS
 const websiteInputs = [
     "bookName",
@@ -46,7 +52,6 @@ function initializeNotes() {
     resizeNotes();
 }
 
-
 // TOGGLE DONE ON BINGO TABLE
 function initializeBingoTable() {
     const bingoCells = document.querySelectorAll(".bingo-table td");
@@ -68,25 +73,38 @@ function initializeBingoTable() {
         });
     });
 }
-
-
+console.log("1",financeState.balances.Car)
 // PROGRESS TRACKER FOR GOALS
-function setupProgress(amountId, goalId, progressId) {
+function setupProgress(amountId, goalId, progressId, balanceName = null) {
 
-    const amountInput = document.getElementById(amountId);
+    const amountElement = document.getElementById(amountId);
     const goalInput = document.getElementById(goalId);
     const progressBar = document.getElementById(progressId);
 
+    function getAmount() {
+        if (balanceName) {
+            return financeState.balances[balanceName];
+        }
+        return Number(amountElement.value) || 0;
+    }
+
     function updateProgress() {
 
-        const amount = Number(amountInput.value) || 0;
+        const amount = getAmount();
         const goal = Number(goalInput.value) || 0;
+
+        if (balanceName) {
+            amountElement.textContent = `£${amount.toFixed(2)}`;
+        }
 
         progressBar.value = amount;
         progressBar.max = goal;
     }
 
-    amountInput.addEventListener("input", updateProgress);
+    if (!balanceName) {
+        amountElement.addEventListener("input", updateProgress);
+    }
+
     goalInput.addEventListener("input", updateProgress);
 
     updateProgress();
@@ -94,12 +112,11 @@ function setupProgress(amountId, goalId, progressId) {
 
 function initializeProgressBars() {
     [
-        ["carAmount", "carGoal", "carProgress"],
-        ["holidayAmount", "holidayGoal", "holidayProgress"],
+        ["carAmount", "carGoal", "carProgress", "Car"],
+        ["holidayAmount", "holidayGoal", "holidayProgress", "Holiday"],
         ["readAmount", "readGoal", "readProgress"],
     ].forEach(ids => setupProgress(...ids));
 }
-
 
 // DISPLAY CURRENT DAY'S WORKOUT / TEA INFORMATION
 function getTodayName() {
@@ -112,10 +129,10 @@ function renderTodayWorkout() {
 
     const workoutName = localStorage.getItem(`workout-${today.toLowerCase()}`);
     const workout = workouts[workoutName];
-    const workoutContainer = document.getElementById("today-workout-card");
+    
 
     if (!workoutName || !workout) {
-        workoutContainer.innerHTML = `
+        containers.workoutContainer.innerHTML = `
             <div>
                 <h3>Today's Workout</h3>
                 <p>Rest Day</p>
@@ -136,7 +153,7 @@ function renderTodayWorkout() {
         `)
         .join("");
 
-    workoutContainer.innerHTML = `
+    containers.workoutContainer.innerHTML = `
         <div class="workout">
             <h3>Today's Workout: ${workout.name}</h3>
             <table class="workout-description-table">
@@ -203,7 +220,23 @@ function renderTodayMeal() {
 
 }
 
+function loadFinances() {
+    const saved = localStorage.getItem("financeState");
+
+    if (!saved) return;
+
+    const loaded = JSON.parse(saved, (key, value) => {
+        if (key === "date") {
+            return new Date(value);
+        }
+        return value;
+    });
+
+    Object.assign(financeState, loaded);
+}
+
 function init() {
+    loadFinances();
     initializeStorage();
     initializeNotes();
     initializeBingoTable();

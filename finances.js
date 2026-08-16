@@ -198,7 +198,7 @@ function generatePayAllocationInputs() {
     let html = '<div>';
 
     Object.entries(financeState.payAllocations).forEach(([name, value]) => {
-    html += `
+        html += `
             <div class="allocation">
                 <span class="allocation-label">${name}</span>
 
@@ -238,14 +238,14 @@ function simulate(financeState) {
     Object.keys(financeState.balances).forEach(account => {
         changes[account] = new Array(financeDays).fill(0);
     });
-    const firstPayDay = payDates.find(payDay => payDay >= payDates[6]);
-    const secondPayDay = payDates.find(payDay => payDay >= payDates[7]);
+
+    const nextPayDay = payDates.find(payDay => payDay >= new Date());
 
     for (let i = 0; i < dates.length; i++) {
         
         const today = dates[i];
         const isPayDay = payDates.some(payDay => sameDay(today, payDay));
-        const pay = (sameDay(today, firstPayDay) || sameDay(today, secondPayDay)) ? calculateTotalHours()*financeState.hourlyRate : financeState.pay;
+        const pay = (sameDay(today, nextPayDay)) ? calculateTotalHours()*financeState.hourlyRate : financeState.pay;
 
         // console.log("Pay:", i,":", pay)
         if (isPayDay) {
@@ -339,6 +339,11 @@ function simulate(financeState) {
         holiday: cumulative(
             financeState.balances.Holiday,
             changes.Holiday
+        ),
+
+        gifts: cumulative(
+            financeState.balances.Gifts,
+            changes.Gifts
         )
     };
 
@@ -349,6 +354,7 @@ function simulate(financeState) {
         forecast.spending[i] +
         forecast.car[i] +
         forecast.holiday[i] +
+        forecast.gifts[i] +
         forecast.bills[i]
     ))
 );
@@ -411,6 +417,13 @@ const forecastChartYear= new Chart(ctxY, {
                 borderColor: "orange",
                 pointRadius: 0,
                 borderWidth: 2,
+            },
+            {
+                label: "Gifts",
+                data: result.forecast.gifts,
+                borderColor: "white",
+                pointRadius: 0,
+                borderWidth: 2,
             }
     ]
     },
@@ -470,6 +483,13 @@ const forecastChartMonth= new Chart(ctxM, {
                 borderColor: "orange",
                 pointRadius: 0,
                 borderWidth: 2,
+            },
+            {
+                label: "Gifts",
+                data: result.forecast.gifts,
+                borderColor: "white",
+                pointRadius: 0,
+                borderWidth: 2,
             }
     ]
     },
@@ -501,6 +521,7 @@ function updateForecastChart () {
     forecastChartYear.data.datasets[3].data = result.forecast.savings;
     forecastChartYear.data.datasets[4].data = result.forecast.car;
     forecastChartYear.data.datasets[5].data = result.forecast.holiday;
+    forecastChartYear.data.datasets[6].data = result.forecast.gifts;
 
     forecastChartMonth.data.datasets[0].data = result.forecast.total.slice(0, 31);
     forecastChartMonth.data.datasets[1].data = result.forecast.spending.slice(0, 31);
@@ -508,6 +529,7 @@ function updateForecastChart () {
     forecastChartMonth.data.datasets[3].data = result.forecast.savings.slice(0, 31);
     forecastChartMonth.data.datasets[4].data = result.forecast.car.slice(0, 31);
     forecastChartMonth.data.datasets[5].data = result.forecast.holiday.slice(0, 31);
+    forecastChartMonth.data.datasets[6].data = result.forecast.gifts.slice(0, 31);
 
     forecastChartYear.data.labels = labels;
     forecastChartMonth.data.labels = labels.slice(0, 31);
@@ -572,7 +594,7 @@ function generateMonthText(result) {
 function generateBalances() {
 
     const balanceTotal = Object.values(financeState.balances).reduce((sum, val) => sum + val, 0);
-        
+    
     let html = '<div class="balance-section">';
 
     Object.entries(financeState.balances).forEach(([name, value]) => {
@@ -621,7 +643,8 @@ function generateOutgoingsBar() {
 
     const expenses = Object.entries(financeState.monthlyOutgoings).sort((a, b) => Math.abs(b[1].amount) - Math.abs(a[1].amount));
     const outTotal = expenses.reduce((sum, [, info]) => {return sum + Math.abs(info.amount);}, 0);
-    const maxOut = outTotal
+
+    const maxOut = outTotal + 10
     
     const colours = [
         "#4caf50",
@@ -754,19 +777,51 @@ function saveFinances() {
     localStorage.setItem("financeState", JSON.stringify(financeState));
 }
 
+function mergeDeep(defaults, saved) {
+
+    for (const key of Object.keys(defaults)) {
+
+        // If this property is an object, recursively merge it
+        if (
+            defaults[key] !== null &&
+            typeof defaults[key] === "object" &&
+            !Array.isArray(defaults[key])
+        ) {
+
+            if (
+                saved[key] !== null &&
+                typeof saved[key] === "object" &&
+                !Array.isArray(saved[key])
+            ) {
+                mergeDeep(defaults[key], saved[key]);
+            }
+
+        } else if (Object.prototype.hasOwnProperty.call(saved, key)) {
+
+            // Primitive value exists in saved data, so use it
+            defaults[key] = saved[key];
+        }
+    }
+
+    return defaults;
+}
+
 function loadFinances() {
+
     const saved = localStorage.getItem("financeState");
 
     if (!saved) return;
 
     const loaded = JSON.parse(saved, (key, value) => {
+
         if (key === "date") {
             return new Date(value);
         }
+
         return value;
     });
 
-    Object.assign(financeState, loaded);
+    mergeDeep(financeState, loaded);
 }
 
 function initializeFinancePage() {
