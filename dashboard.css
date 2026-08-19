@@ -44,6 +44,26 @@ h3 {
     color: var(--text);
 }
 
+.link-headers {
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--input-text);
+}
+
+.link-headers a,
+.link-headers .current-page-header {
+    flex: 1;
+    text-align: center;
+}
+
+.current-page-header {
+    font-size: 25px;
+    border: 1px solid;
+    color: var(--text)
+}
+
 .page {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
