@@ -234,14 +234,13 @@ function simulate(financeState) {
         }, 0); // Comes out as a positive number
 
     const monthlyFixed = monthlyTotal + (financeState.monthlyOutgoings.Food.amount + financeState.monthlyOutgoings.Other.amount)
-
     Object.keys(financeState.balances).forEach(account => {
         changes[account] = new Array(financeDays).fill(0);
     });
 
     const nextPayDay = payDates.find(payDay => payDay >= new Date());
 
-    for (let i = 0; i < dates.length; i++) {
+    for (let i = 1; i < dates.length; i++) {
         
         const today = dates[i];
         const isPayDay = payDates.some(payDay => sameDay(today, payDay));
@@ -264,7 +263,7 @@ function simulate(financeState) {
             changes.Savings[i] += pay - monthlyFixed - allocated;
         }
 
-        if (isPayDay && i < 50)
+        if (isPayDay && i < 30)
         {
             changes.Savings[i] -= ( - (monthlyFixed))
             changes.Bills[i] -= (monthlyFixed);
@@ -286,7 +285,7 @@ function simulate(financeState) {
             }
 
             if ((outgoing.name === "Rent" || "Spotify")
-                && (i < 55)
+                && (i < 30)
                 && today.getDate() === outgoing.day)
             {   
                 changes.Bills[i] -= outgoing.amount;

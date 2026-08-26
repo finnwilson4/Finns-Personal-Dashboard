@@ -1,24 +1,47 @@
 .grade-summary {
     grid-column: span 12;
+    margin: 10px;
 }
 
-.grade-summary table {
+.grade-summary-content {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.grade-summary-main table {
     width: 100%;
     border: 1px solid var(--border);
     border-collapse: collapse;
 }
 
-.grade-summary table th {
+.grade-summary-main table th {
     border: 1px solid var(--border);
     text-align: center;
     color: var(--text);
 }
 
-.grade-summary table td {
+.grade-summary-main table td {
     border-left: 1px solid var(--border);
     border-right: 1px solid var(--border);
     text-align: center;
     color: var(--second-text);
+}
+
+.y4-targets {
+    margin: 5px;
+}
+
+.targets-table {
+    width: 100%;
+    font-size: 14px;
+    color: var(--second-text);
+}
+
+.targets-table td {
+    padding-top: 5px;
+    padding-bottom: 0px;
 }
 
 .course-progress {
@@ -46,6 +69,24 @@
 .uni-timtable td {
     border: 1px solid var(--border);
     color: var(--second-text);
+}
+
+.deadlines {
+    grid-column: span 12;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    
+}
+
+#approaching-deadlines-container {
+    display: grid;
+    grid-column: span 12;
+    grid-template-columns: repeat(12, 1fr);
+}
+
+.deadlineWeek {
+    margin: 5px;
+    grid-column: span 6;
 }
 
 .modules {
@@ -130,19 +171,4 @@
 
 .slider-row input[type="range"] {
     width: 100%;
-}
-
-.targets-table {
-    width: 100%;
-    font-size: 16px;
-    color: var(--second-text);
-}
-
-.targets-table td {
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-
-.deadlineWeek {
-    margin: 5px;
 }

@@ -15,47 +15,48 @@
     </h1>
 </div>
 
-
-<div class="page-layout">
-    <aside class="sidebar left-sidebar">
-        <div class="card year4">
-            <h2>Year 4 Simulation Sliders</h2>
-            <div id="year4-sliders"></div>
-        </div>
-    </aside>
-
-    <div class="dashboard">
-        <div class="card grade-summary">
-            <h2>Grade Summary</h2>
-            <div id="grade-table-container"></div>
-            <div id="course-grade-container"></div>
-            <div id="year-grade-container"></div>
-        </div>
-
-        <div class="card uni-timetable">
-            <h2>Timetable</h2>
-            <div id="timetable"></div>
-        </div>
-
-        <div class="card modules">
-            <h2>Modules</h2>
-            <div id="module-container"></div>
-        </div>
-
+<div class="page">
+    <div class="card grade-summary">
         
+        <div class="grade-summary-content">
+            <div class="grade-summary-main">
+                <h2>Grade Summary</h2>
+                <div id="grade-table-container"></div>
+                <div id="course-grade-container"></div>
+                <div id="year-grade-container"></div>
+            </div>
+            <div class="y4-targets card">
+                <h2>Y4 Targets:</h2>
+                <div id="y4-targets-container"></div>
+            </div>
+        </div>
     </div>
+    
+    <div class="page-layout">
+        <aside class="sidebar left-sidebar">
+            <div class="card year4">
+                <h2>Year 4 Simulation Sliders</h2>
+                <div id="year4-sliders"></div>
+            </div>
+        </aside>
 
-    <aside class="sidebar right-sidebar">
-        <div class="card">
-            <h2>Y4 Targets:</h2>
-            <div id="y4-targets-container"></div>
+        <div class="dashboard">
+            <div class="card uni-timetable">
+                <h2>Timetable</h2>
+                <div id="timetable"></div>
+            </div>
+
+            <div class="card deadlines">
+                <h2>Approaching Deadlines</h2>
+                <div id="approaching-deadlines-container"></div>
+            </div>
+
+            <div class="card modules">
+                <h2>Modules</h2>
+                <div id="module-container"></div>
+            </div>  
         </div>
-        <div class="card">
-            <h2>Approaching Deadlines</h2>
-            <div id="approaching-deadlines-container"></div>
-        </div>
-    </aside>
+    </div>
 </div>
-
 <script src="shared-data.js"></script>
 <script type="module" src="uni-page.js"></script>

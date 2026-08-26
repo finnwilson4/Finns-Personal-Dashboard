@@ -25,9 +25,63 @@
       <div>
         <a href="https://moodle.nottingham.ac.uk/my/" style="color:red">Moodle Home Page</a>
       </div>
+    </div>
+    <div class="card">
+      <h2>Important Dates Soon:</h2>
+    </div>
+    <div class="card">
+      <h2>Quick Stats:</h2>
+      <div class="stats-row">
+          <label>>15 Pages Days:</label>
+          <input id="readingDays" type="number">
+      </div>
 
+      <div class="stats-row">
+          <label>Workout Days:</label>
+          <input id="workoutDays" type="number">
+      </div>
+
+      <div class="stats-row">
+          <label>>2 Pt Water Days:</label>
+          <input id="waterDays" type="number">
+      </div>
     </div>
 
+    <div class="card">
+      <h2>Progress</h2>
+      <div class="goal-row">
+        <label for="carAmount">Car:</label>
+        <span id="carAmount" class="stat-amount"></span>
+      
+        <label for="carGoal">Goal:</label>
+        <input id="carGoal" type="number">
+      </div>
+
+      <progress id="carProgress" class="amount-progress">
+      </progress>
+
+      <div class="goal-row">
+        <label for="holidayAmount">Hoiday:</label>
+        <span id="holidayAmount" class="stat-amount"></span>
+      
+        <label for="holidayGoal">Goal:</label>
+        <input id="holidayGoal" type="number">
+      </div>
+
+      <progress id="holidayProgress" class="amount-progress">
+      </progress>
+
+      <div class="goal-row">
+        <label for="readAmount">Books Read:</label>
+        <input id="readAmount" type="number">
+      
+        <label for="readGoal">Goal:</label>
+        <input id="readGoal" type="number">
+      </div>
+
+      <progress id="readProgress" class="amount-progress">
+      </progress>
+    </div>
   </aside>
 
   <div class="dashboard">
@@ -146,65 +200,6 @@
         <textarea class="box" id="notes"></textarea>
       </div>
   </div>
-
-  <aside class="sidebar right-sidebar">
-    <div class="card">
-      <h2>Important Dates Soon:</h2>
-    </div>
-    <div class="card">
-      <h2>Quick Stats:</h2>
-      <div class="stats-row">
-          <label>>15 Pages Days:</label>
-          <input id="readingDays" type="number">
-      </div>
-
-      <div class="stats-row">
-          <label>Workout Days:</label>
-          <input id="workoutDays" type="number">
-      </div>
-
-      <div class="stats-row">
-          <label>>2 Pt Water Days:</label>
-          <input id="waterDays" type="number">
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Progress</h2>
-      <div class="goal-row">
-        <label for="carAmount">Car:</label>
-        <span id="carAmount" class="stat-amount"></span>
-      
-        <label for="carGoal">Goal:</label>
-        <input id="carGoal" type="number">
-      </div>
-
-      <progress id="carProgress" class="amount-progress">
-      </progress>
-
-      <div class="goal-row">
-        <label for="holidayAmount">Hoiday:</label>
-        <span id="holidayAmount" class="stat-amount"></span>
-      
-        <label for="holidayGoal">Goal:</label>
-        <input id="holidayGoal" type="number">
-      </div>
-
-      <progress id="holidayProgress" class="amount-progress">
-      </progress>
-
-      <div class="goal-row">
-        <label for="readAmount">Books Read:</label>
-        <input id="readAmount" type="number">
-      
-        <label for="readGoal">Goal:</label>
-        <input id="readGoal" type="number">
-      </div>
-
-      <progress id="readProgress" class="amount-progress">
-      </progress>
-    </div>  
-  </aside>
     
 </div>
 

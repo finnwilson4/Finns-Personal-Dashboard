@@ -13,11 +13,21 @@
     margin-bottom: 7px;
 }
 
+.ingredient-header,
 .ingredient-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 50px 50px;
+    gap: 10px;
     align-items: center;
-    margin: 6px 0;
+}
+
+.ingredient-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.ingredient-missing {
+    background: rgba(5, 209, 18, 0.715);
 }
 
 .ingredient-row label {
@@ -42,6 +52,10 @@
     grid-column: span 3;
 }
 
+.meal h3{
+    font-size: 16px;
+}
+
 .meal-description-table{
     width: 100%;
     color: var(--second-text);
@@ -49,6 +63,13 @@
 
 .meal-description-table td{
     text-align: center;
+}
+
+.toggle-ingredients {
+    background: none;
+    border-radius: var(--radius-small);
+    margin: 10px;
+    cursor: pointer;
 }
 
 .meal-plan {

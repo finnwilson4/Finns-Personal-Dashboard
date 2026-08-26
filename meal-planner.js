@@ -27,28 +27,79 @@ function renderMeals() {
         for (const [ingredientKey, quantity] of Object.entries(meal.ingredients)) {
 
             const ingredient = ingredients[ingredientKey];
-            totalCost += ((ingredient.price  * quantity / ingredient.number) / meal.portions);
+
+            totalCost += (
+                (ingredient.price * quantity / ingredient.number)
+                / meal.portions
+            );
 
             rows += `
                 <tr>
                     <td style="width: 40%">${ingredient.name}</td>
                     <td style="width: 40%">x${quantity}</td>
-                    <td style="width: 40%">£${(ingredient.price * quantity/ingredient.number).toFixed(2)}</td>
+                    <td style="width: 40%">
+                        £${(ingredient.price * quantity / ingredient.number).toFixed(2)}
+                    </td>
                 </tr>
             `;
         }
 
-        mealsContainer.innerHTML += `
-            <div class="card meal">
-                <h2>${meal.name}</h2>
-                ${Object.keys(meal.ingredients).length < 3 ? `<p>Quick Meal</p> <h3>Total Cost (per portion): £${totalCost.toFixed(2)}</h3>` : `
-                    <table class="meal-description-table">${rows}</table>
+        const isQuickMeal = Object.keys(meal.ingredients).length < 3;
+
+        if (isQuickMeal) {
+
+            // Quick meals stay exactly as they were before
+            mealsContainer.innerHTML += `
+                <div class="card meal">
+                    <h2>${meal.name}</h2>
+                    <p>Quick Meal</p>
+                    <h3>Total Cost (per portion): £${totalCost.toFixed(2)}</h3>
+                </div>
+            `;
+
+        } else {
+
+            // Normal meals have collapsible ingredients
+            mealsContainer.innerHTML += `
+                <div class="card meal">
+                    <h2>${meal.name}</h2>
+
+                    <button class="toggle-ingredients">
+                        Show Ingredients
+                    </button>
+
+                    <div class="meal-ingredients" style="display: none;">
+                        <table class="meal-description-table">
+                            ${rows}
+                        </table>
+                    </div>
+
                     <h3>Portions: ${meal.portions}</h3>
                     <h3>Total Cost (per portion): £${totalCost.toFixed(2)}</h3>
-                `}
-            </div>
-        `;
+                </div>
+            `;
+        }
     }
+
+    // Add Show/Hide functionality
+    document.querySelectorAll(".toggle-ingredients").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const ingredientsSection = button.nextElementSibling;
+
+            if (ingredientsSection.style.display === "none") {
+
+                ingredientsSection.style.display = "block";
+                button.textContent = "Hide Ingredients";
+
+            } else {
+
+                ingredientsSection.style.display = "none";
+                button.textContent = "Show Ingredients";
+            }
+        });
+    });
 }
 
 // Generate meal options
@@ -96,6 +147,25 @@ function renderMealPlan() {
 function renderIngredients() {
 
     ingredientsContainer.innerHTML = "";
+    const shoppingList = calculateRequiredIngredients();
+    let totalCost = 0;
+
+    // Calculate total cost
+    for (const [ingredientKey, quantity]
+        of Object.entries(shoppingList)) {
+
+        const ingredient = ingredients[ingredientKey];
+
+        if (!ingredient) continue;
+
+        const packsNeeded = Math.ceil(quantity / ingredient.number);
+
+        totalCost += packsNeeded * ingredient.price;
+    }
+
+    ingredientsContainer.innerHTML += `
+        <h3 class="ingredient-total-cost" style="margin: 0px">Cost: £${totalCost.toFixed(2)}</h3>
+    `;
 
     categories.forEach(category => {
 
@@ -105,10 +175,28 @@ function renderIngredients() {
 
             if (ingredient.category !== category) continue;
 
+            const quantity = shoppingList[key] || 0;
+
+            const packsNeeded = quantity > 0
+                ? Math.ceil(quantity / ingredient.number)
+                : 0;
+
+            const missingDisplay = quantity > 0
+                    ? `x${packsNeeded} (x${quantity})`
+                    : "";
+
+            const rowClass = quantity > 0
+                    ? "ingredient-row ingredient-missing"
+                    : "ingredient-row";
+
             rows += `
                 <div class="ingredient-row">
                     <label>${ingredient.name}</label>
                     <input type="number" class="ingredient-input" data-key="${key}">
+                    <span
+                        class="ingredient-need"
+                        data-key="${key}"
+                    >${missingDisplay}</span>
                 </div>
             `;
         }
@@ -116,15 +204,49 @@ function renderIngredients() {
         ingredientsContainer.innerHTML += `
             <div class="card ingredient-category">
                 <h2>${category}</h2>
+                <div class="ingredient-header">
+                    <span></span>
+                    <span>Have</span>
+                    <span>Need</span>
+                </div>
                 ${rows}
             </div>
         `;
     });
 }
 
-// Generate Missing Ingredients Column
-function updateRequiredIngredients() {
-    
+function updateIngredientNeeds() {
+
+    const shoppingList = calculateRequiredIngredients();
+    let totalCost = 0;
+
+    document.querySelectorAll(".ingredient-need").forEach(needElement => {
+
+        const key = needElement.dataset.key;
+        const quantity = shoppingList[key] || 0;
+
+        if (quantity > 0) {
+
+            const ingredient = ingredients[key];
+            const packsNeeded = Math.ceil(quantity / ingredient.number);
+            
+            totalCost += packsNeeded * ingredient.price;
+            needElement.textContent = `x${packsNeeded} (x${quantity})`;
+
+        } else {
+
+            needElement.textContent = "";
+        }
+    });
+    const totalCostElement =
+        document.querySelector(".ingredient-total-cost");
+
+    totalCostElement.textContent =
+        `Cost: £${totalCost.toFixed(2)}`;
+}
+
+function calculateRequiredIngredients() {
+
     const schedule = JSON.parse(localStorage.getItem("mealSchedule")) || {};
     const stock = JSON.parse(localStorage.getItem("ingredientStock")) || {};
     const mealCounts = {};
@@ -138,7 +260,7 @@ function updateRequiredIngredients() {
             (mealCounts[mealKey] || 0) + 1;
     });
 
-    // Calculate ingredients required
+    // Calculate total ingredients required
     const ingredientsNeeded = {};
 
     for (const [mealKey, count] of Object.entries(mealCounts)) {
@@ -147,11 +269,10 @@ function updateRequiredIngredients() {
 
         if (!meal) continue;
 
-        const cooksNeeded =
-            Math.ceil(count / meal.portions);
+        const cooksNeeded = Math.ceil(count / meal.portions);
 
         for (const [ingredientKey, quantity]
-                of Object.entries(meal.ingredients)) {
+            of Object.entries(meal.ingredients)) {
 
             ingredientsNeeded[ingredientKey] =
                 (ingredientsNeeded[ingredientKey] || 0)
@@ -159,76 +280,20 @@ function updateRequiredIngredients() {
         }
     }
 
-    // Compare required vs owned
+    // Compare required ingredients with stock
     const shoppingList = {};
 
-    for (const [ingredientKey, required] of Object.entries(ingredientsNeeded)) {
+    for (const [ingredientKey, required]
+        of Object.entries(ingredientsNeeded)) {
 
         const owned = Number(stock[ingredientKey]) || 0;
 
-        if (owned < required) {shoppingList[ingredientKey] = required - owned;}
+        if (owned < required) {
+            shoppingList[ingredientKey] = required - owned;
+        }
     }
 
-    // Display results
-    let html = "";
-    let totalCost = 0;
-
-    for (const [ingredientKey, quantity] of Object.entries(shoppingList)) {
-
-        const ingredient = ingredients[ingredientKey];
-
-        if (!ingredient) continue;
-
-        const packsNeeded = Math.ceil(quantity / ingredient.number);
-
-        totalCost += packsNeeded * ingredient.price;
-    }
-
-    categories.forEach(category => {
-
-        let rows = "";
-
-        for (const [ingredientKey, quantity] of Object.entries(shoppingList)) {
-            
-            const ingredient = ingredients[ingredientKey];
-            const packsNeeded = Math.ceil(quantity / ingredient.number);
-
-            if (ingredient.category !== category) {
-                continue;
-            }
-
-            rows += `
-                <div class="ingredient-row">
-                    <label>${ingredient.name}</label>
-                    <label>${(packsNeeded * ingredient.price).toFixed(2)}</label>
-                    <span>x${packsNeeded} (x${quantity})</span>
-                </div>
-            `;
-        }
-
-        if (rows !== "") {
-            html += `
-                <div class="card ingredient-category">
-                    <h2>${category}</h2>
-                    ${rows}
-                    
-                </div>
-            `;
-        }
-    });
-
-    if (html === "") {
-        html = "<p>All ingredients available.</p>";
-    } else {
-    html = `
-        <div>
-            <h3>Total Cost: £${totalCost.toFixed(2)}</h3>
-        </div>
-        ${html}
-    `;
-}
-
-    missingIngredientsContainer.innerHTML = html;
+    return shoppingList;
 }
 
 // Save Selected Options
@@ -245,7 +310,7 @@ function updateMealPlan() {
 
             localStorage.setItem("mealSchedule", JSON.stringify(schedule));
 
-            updateRequiredIngredients();
+            updateIngredientNeeds();
         });
     });
 }
@@ -283,7 +348,7 @@ function updateInputs() {
                 JSON.stringify(ingredientStock)
             );
 
-            updateRequiredIngredients();
+            updateIngredientNeeds();
         });
     });
 }
@@ -298,7 +363,7 @@ function initPage() {
     loadSelectedOptions();
     updateMealPlan();
 
-    updateRequiredIngredients();
+    updateIngredientNeeds();
 }
 
 initPage();

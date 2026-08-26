@@ -460,7 +460,7 @@ const meals = {
     },
 
     creamyChickenPasta: {
-        name: "Creamy Chicken Pasta",
+        name: "Creamy Chkn Pasta",
         time: 30,
         portions: 3,
         ingredients: {
@@ -510,7 +510,7 @@ const meals = {
     },
 
     chickenGarlicBread: {
-        name: "Chicken Stuffed Garic Bread",
+        name: "Chkn Stuffed Garic Bread",
         time: 30,
         portions: 2,
         ingredients: {
