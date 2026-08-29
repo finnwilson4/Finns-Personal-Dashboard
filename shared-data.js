@@ -525,6 +525,7 @@ const meals = {
 };
 
 const financeState = {
+    payTracker: {},
 
     workSchedule : Array.from({ length: 35 }, () => ({
         worked: false,

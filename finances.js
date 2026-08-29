@@ -7,6 +7,7 @@ containers = {
     monthTextContainer: document.querySelector("#month-text"),
     yearTextContainer: document.querySelector("#year-text"),
     dayTextContainer: document.querySelector("#day-text"),
+    payDisplayContainer: document.querySelector("#pay-tracker"),
 }
 
 const financeDays = 365
@@ -371,60 +372,30 @@ function simulate(financeState) {
 const ctxY = document.getElementById("forecast-chart-year");
 const ctxM = document.getElementById("forecast-chart-month");
 const result = simulate(financeState);
+
+const chartDefinitions = [
+    ["Total", "total", "darkcyan"],
+    ["Spending", "spending", "slateblue"],
+    ["Bills", "bills", "firebrick"],
+    ["Savings", "savings", "green"],
+    ["Car", "car", "black"],
+    ["Holiday", "holiday", "orange"],
+    ["Gifts", "gifts", "white"]
+]
+
+const chartDatasets1 = chartDefinitions.map(([label, key, borderColor]) => ({
+    label,
+    data: result.forecast[key],
+    borderColor,
+    pointRadius: 0,
+    borderWidth: 2
+}));
+
 const forecastChartYear= new Chart(ctxY, {
     type: "line",
     
     data: {
-        datasets: [{
-                label: "Total",
-                data: result.forecast.total,
-                borderColor: "darkcyan",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Spending",
-                data: result.forecast.spending,
-                borderColor: "slateblue",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Bills",
-                data: result.forecast.bills,
-                borderColor: "firebrick",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Savings",
-                data: result.forecast.savings,
-                borderColor: "green",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Car",
-                data: result.forecast.car,
-                borderColor: "black",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Holiday",
-                data: result.forecast.holiday,
-                borderColor: "orange",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Gifts",
-                data: result.forecast.gifts,
-                borderColor: "white",
-                pointRadius: 0,
-                borderWidth: 2,
-            }
-    ]
+        datasets: structuredClone(chartDatasets1)
     },
 
     options: {
@@ -441,56 +412,7 @@ const forecastChartMonth= new Chart(ctxM, {
     type: "line",
     
     data: {
-        datasets: [{
-                label: "Total",
-                data: result.forecast.total,
-                borderColor: "darkcyan",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Spending",
-                data: result.forecast.spending,
-                borderColor: "slateblue",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Bills",
-                data: result.forecast.bills,
-                borderColor: "firebrick",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Savings",
-                data: result.forecast.savings,
-                borderColor: "green",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Car",
-                data: result.forecast.car,
-                borderColor: "black",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Holiday",
-                data: result.forecast.holiday,
-                borderColor: "orange",
-                pointRadius: 0,
-                borderWidth: 2,
-            },
-            {
-                label: "Gifts",
-                data: result.forecast.gifts,
-                borderColor: "white",
-                pointRadius: 0,
-                borderWidth: 2,
-            }
-    ]
+        datasets: structuredClone(chartDatasets1)
     },
 
     options: {
@@ -514,21 +436,10 @@ function updateForecastChart () {
         })
     );
 
-    forecastChartYear.data.datasets[0].data = result.forecast.total;
-    forecastChartYear.data.datasets[1].data = result.forecast.spending;
-    forecastChartYear.data.datasets[2].data = result.forecast.bills;
-    forecastChartYear.data.datasets[3].data = result.forecast.savings;
-    forecastChartYear.data.datasets[4].data = result.forecast.car;
-    forecastChartYear.data.datasets[5].data = result.forecast.holiday;
-    forecastChartYear.data.datasets[6].data = result.forecast.gifts;
-
-    forecastChartMonth.data.datasets[0].data = result.forecast.total.slice(0, 31);
-    forecastChartMonth.data.datasets[1].data = result.forecast.spending.slice(0, 31);
-    forecastChartMonth.data.datasets[2].data = result.forecast.bills.slice(0, 31);
-    forecastChartMonth.data.datasets[3].data = result.forecast.savings.slice(0, 31);
-    forecastChartMonth.data.datasets[4].data = result.forecast.car.slice(0, 31);
-    forecastChartMonth.data.datasets[5].data = result.forecast.holiday.slice(0, 31);
-    forecastChartMonth.data.datasets[6].data = result.forecast.gifts.slice(0, 31);
+    chartDefinitions.forEach(([, key], i) => {
+        forecastChartYear.data.datasets[i].data = result.forecast[key];
+        forecastChartMonth.data.datasets[i].data = result.forecast[key].slice(0, 31);
+    });
 
     forecastChartYear.data.labels = labels;
     forecastChartMonth.data.labels = labels.slice(0, 31);
@@ -739,7 +650,7 @@ function generateExpenseSliders() {
 
 function generateDayText() {
 
-    const reuslt = simulate(financeState)
+    const result = simulate(financeState)
     const monOut = Object.values(financeState.monthlyOutgoings)
         .reduce((sum, expense) => {
             return sum + Math.abs(expense.amount);
@@ -770,6 +681,242 @@ function updateWeeklyExpense(name, value) {
     generateDayText();
     generateOutgoingsBar();
     updateForecastChart();
+}
+
+function getTaxYearPayDates(taxYearStartYear) {
+
+    const taxYearStart = new Date(taxYearStartYear, 3, 6);     // 6 April
+    const taxYearEnd = new Date(taxYearStartYear + 1, 3, 5);   // 5 April
+
+    return payDates.filter(date =>
+        date >= taxYearStart &&
+        date <= taxYearEnd
+    );
+}
+
+function renderPayTracker() {
+    
+    let html = `<table class="pay-display-table">
+        <colgroup>
+            <col class="pay-date-col">
+            <col class="money-col">
+            <col class="money-col">
+            <col class="money-col">
+            <col class="money-col">
+        </colgroup>
+        <thead>
+            <tr>
+                <th><u>Pay Date</th>
+                <th><u>Gross</th>
+                <th><u>Tax</th>
+                <th><u>NI</th>
+                <th><u>Net</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+
+    // Running totals
+    let cumulativeGross = 0;
+    let cumulativeTax = 0;
+    let cumulativeNI = 0;
+    let cumulativeNet = 0;
+
+    const taxYearPayDates = getTaxYearPayDates(2026);
+
+    taxYearPayDates.forEach((date, index) => {
+
+        const key = date.toISOString().slice(0, 10);
+
+        const pay = financeState.payTracker[key] ?? {
+            gross: 0,
+            tax: 0,
+            ni: 0
+        };
+
+        const net = pay.gross - pay.tax - pay.ni;
+
+        // Add this pay period to the running totals
+        cumulativeGross += pay.gross;
+        cumulativeTax += pay.tax;
+        cumulativeNI += pay.ni;
+        cumulativeNet += net;
+
+        html += `
+            <tr>
+                <td>
+                    ${date.toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric"
+                    })}
+                </td>
+
+                <td>
+                    <input
+                        type="number"
+                        value="${pay.gross}"
+                        onchange="updatePayTracker('${key}', 'gross', this.value)"
+                    >
+                    <div class="cumulative-value">
+                        (£${cumulativeGross.toFixed(2)})
+                    </div>
+                </td>
+
+                <td>
+                    <input
+                        type="number"
+                        value="${pay.tax}"
+                        onchange="updatePayTracker('${key}', 'tax', this.value)"
+                    >
+                    <div class="cumulative-value">
+                        (£${cumulativeTax.toFixed(2)}) 
+                    </div>
+                </td>
+
+                <td>
+                    <input
+                        type="number"
+                        value="${pay.ni}"
+                        onchange="updatePayTracker('${key}', 'ni', this.value)"
+                    >
+                    <div class="cumulative-value">
+                        (£${cumulativeNI.toFixed(2)})
+                    </div>
+                </td>
+
+                <td>
+                    £${net.toFixed(2)}
+                    <div class="cumulative-value">
+                        (£${cumulativeNet.toFixed(2)})
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    html += `
+            </tbody>
+        </table>
+    `;
+    containers.payDisplayContainer.innerHTML = html;
+
+    
+}
+
+function updatePayTracker(date, field, value) {
+
+    if (!financeState.payTracker[date]) {
+        financeState.payTracker[date] = {
+            gross: 0,
+            tax: 0,
+            ni: 0
+        };
+    }
+
+    financeState.payTracker[date][field] = Number(value);
+
+    saveFinances();
+    renderPayTracker();
+    updatePayTrackerChart();
+}
+
+function getPayTrackerChartData() {
+    let cumulativeGross = 0;
+    let cumulativeTax = 0;
+    let cumulativeNI = 0;
+    let cumulativeNet = 0;
+
+    const taxYearPayDates = getTaxYearPayDates(2026);
+
+    return taxYearPayDates.map(date => {
+
+        const key = date.toISOString().slice(0, 10);
+
+        const pay = financeState.payTracker[key] ?? {
+            gross: 0,
+            tax: 0,
+            ni: 0
+        };
+
+        const net = pay.gross - pay.tax - pay.ni;
+        const deductions = pay.tax + pay.ni;
+        
+        // Calculate cumulative values
+        cumulativeGross += pay.gross;
+        cumulativeTax += pay.tax;
+        cumulativeNI += pay.ni;
+        cumulativeNet += net;
+
+        return {
+            date: date.toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "short"
+            }),
+            gross: cumulativeGross,
+            net: cumulativeNet,
+            tax: cumulativeTax,
+            ni: cumulativeNI,
+            deductions: cumulativeTax + cumulativeNI
+        };
+    });
+}
+
+const payChartDefinitions = [
+    ["Gross", "gross", "darkcyan"],
+    ["Net", "net", "green"],
+    ["Tax", "tax", "firebrick"],
+    ["NI", "ni", "orange"],
+    ["Total Deductions", "deductions", "slateblue"]
+];
+
+function createPayChartDatasets(data) {
+
+    return payChartDefinitions.map(([label, key, borderColor]) => ({
+        label,
+        data: data.map(pay => pay[key]),
+        borderColor,
+        pointRadius: 3,
+        borderWidth: 2
+    }));
+}
+
+const payChart = new Chart(
+    document.getElementById("pay-tracker-chart"),
+    {
+        type: "line",
+
+        data: {
+            labels: getPayTrackerChartData().map(pay => pay.date),
+            datasets: createPayChartDatasets(
+                getPayTrackerChartData()
+            )
+        },
+
+        options: {
+            responsive: true,
+
+            scales: {y: {min: 0}},
+
+            interaction: {
+                mode: "index",
+                intersect: false
+            }
+        }
+    }
+);
+
+function updatePayTrackerChart() {
+
+    const data = getPayTrackerChartData();
+    payChart.data.labels = data.map(pay => pay.date);
+
+    payChart.data.datasets.forEach((dataset, i) => {
+        const [, key] = payChartDefinitions[i];
+        dataset.data = data.map(pay => pay[key]);
+    });
+
+    payChart.update();
 }
 
 function saveFinances() {
@@ -821,6 +968,10 @@ function loadFinances() {
     });
 
     mergeDeep(financeState, loaded);
+
+    if (loaded.payTracker) {
+        financeState.payTracker = loaded.payTracker;
+    }
 }
 
 function initializeFinancePage() {
@@ -831,6 +982,8 @@ function initializeFinancePage() {
     generateOutgoingsBar()
     generateExpenseSliders();
     updateForecastChart();
+    renderPayTracker();
+    updatePayTrackerChart();
 
     const result = simulate(financeState);
     console.log("result:", result);
