@@ -694,6 +694,57 @@ function getTaxYearPayDates(taxYearStartYear) {
     );
 }
 
+const TAX_ALLOWANCE = 12570;
+const NI_RATE = 0.08;
+
+function calculatePredictedPay(totalGross, numberOfPayDays) {
+
+    if (numberOfPayDays === 0 || totalGross <= 0) {
+        return {
+            totalGross: 0,
+            totalTax: 0,
+            totalNI: 0,
+            totalNet: 0,
+            netPerPay: 0
+        };
+    }
+
+    // Equivalent to your Python:
+    //
+    // payPartOne = band1 if salaryYear > 12570 else salaryYear
+    // payPartThree = (salaryYear - band1) * 0.8 if salaryYear > 12570 else 0
+
+    const payPartOne = totalGross > TAX_ALLOWANCE
+        ? TAX_ALLOWANCE
+        : totalGross;
+
+    const payPartThree = totalGross > TAX_ALLOWANCE
+        ? (totalGross - TAX_ALLOWANCE) * 0.8
+        : 0;
+
+    // Python:
+    // niPay = ((salaryWeeks - niWeeks)*0.08)*13
+    //
+    // This simplifies to 8% of the amount above the NI threshold.
+    const niPay = totalGross > TAX_ALLOWANCE
+        ? (totalGross - TAX_ALLOWANCE) * NI_RATE
+        : 0;
+
+    const totalNet = payPartOne + payPartThree - niPay;
+
+    const totalTax = totalGross - totalNet - niPay;
+
+    const netPerPay = totalNet / numberOfPayDays;
+
+    return {
+        totalGross,
+        totalTax,
+        totalNI: niPay,
+        totalNet,
+        netPerPay
+    };
+}
+
 function renderPayTracker() {
     
     let html = `<table class="pay-display-table">
@@ -821,7 +872,28 @@ function updatePayTracker(date, field, value) {
     updatePayTrackerChart();
 }
 
-function getPayTrackerChartData() {
+let predictionMode = "current";
+
+function togglePayPrediction() {
+
+    predictionMode = 
+        predictionMode === "current"
+            ? "average"
+            : "current";
+
+    updatePayTrackerChart();
+
+    // Update button text
+    const button = document.getElementById("pay-prediction-toggle");
+
+    if (predictionMode === "current") {
+        button.textContent = "Prediction: Current Total";
+    } else {
+        button.textContent = "Prediction: Average Pay";
+    }
+}
+
+function getPayTrackerChartData(predictionMode = "average") {
     let cumulativeGross = 0;
     let cumulativeTax = 0;
     let cumulativeNI = 0;
@@ -829,24 +901,65 @@ function getPayTrackerChartData() {
 
     const taxYearPayDates = getTaxYearPayDates(2026);
 
-    return taxYearPayDates.map(date => {
+    const payData = taxYearPayDates.map(date => {
 
         const key = date.toISOString().slice(0, 10);
 
-        const pay = financeState.payTracker[key] ?? {
+        return financeState.payTracker[key] ?? {
             gross: 0,
             tax: 0,
             ni: 0
         };
+    });
+
+    const nonZeroGrossPays = payData.filter(pay => pay.gross > 0);
+
+    const currentTotalGross = payData.reduce(
+        (sum, pay) => sum + pay.gross,
+        0
+    );
+
+    let predictedGross;
+
+    if (predictionMode === "average") {
+
+        const averageGross = nonZeroGrossPays.length > 0
+            ? currentTotalGross / nonZeroGrossPays.length
+            : 0;
+
+        predictedGross =
+            averageGross * taxYearPayDates.length;
+
+    } else {
+
+        // Use current total gross
+        predictedGross = currentTotalGross;
+    }
+
+    // --------------------------------------------------
+    // CALCULATE PREDICTED TAX / NI / NET
+    // --------------------------------------------------
+
+    const predicted = calculatePredictedPay(
+        predictedGross,
+        taxYearPayDates.length
+    );
+
+    return taxYearPayDates.map((date, index) => {
+
+        const key = date.toISOString().slice(0, 10);
+
+        const pay = payData[index];
 
         const net = pay.gross - pay.tax - pay.ni;
-        const deductions = pay.tax + pay.ni;
         
         // Calculate cumulative values
         cumulativeGross += pay.gross;
         cumulativeTax += pay.tax;
         cumulativeNI += pay.ni;
         cumulativeNet += net;
+
+        const predictedCumulativeNet = predicted.netPerPay * (index + 1);
 
         return {
             date: date.toLocaleDateString("en-GB", {
@@ -857,7 +970,8 @@ function getPayTrackerChartData() {
             net: cumulativeNet,
             tax: cumulativeTax,
             ni: cumulativeNI,
-            deductions: cumulativeTax + cumulativeNI
+            deductions: cumulativeTax + cumulativeNI,
+            predictedNet: predictedCumulativeNet
         };
     });
 }
@@ -867,7 +981,8 @@ const payChartDefinitions = [
     ["Net", "net", "green"],
     ["Tax", "tax", "firebrick"],
     ["NI", "ni", "orange"],
-    ["Total Deductions", "deductions", "slateblue"]
+    ["Total Deductions", "deductions", "slateblue"],
+    ["Predicted Net", "predictedNet", "rgb(128, 0, 128, 0.5)"]
 ];
 
 function createPayChartDatasets(data) {
@@ -881,16 +996,17 @@ function createPayChartDatasets(data) {
     }));
 }
 
+const initialPayChartData = getPayTrackerChartData(predictionMode);
+
 const payChart = new Chart(
     document.getElementById("pay-tracker-chart"),
     {
         type: "line",
 
         data: {
-            labels: getPayTrackerChartData().map(pay => pay.date),
-            datasets: createPayChartDatasets(
-                getPayTrackerChartData()
-            )
+            labels: initialPayChartData.map(pay => pay.date),
+            datasets: createPayChartDatasets(initialPayChartData)
+            
         },
 
         options: {
@@ -908,7 +1024,7 @@ const payChart = new Chart(
 
 function updatePayTrackerChart() {
 
-    const data = getPayTrackerChartData();
+    const data = getPayTrackerChartData(predictionMode);
     payChart.data.labels = data.map(pay => pay.date);
 
     payChart.data.datasets.forEach((dataset, i) => {
