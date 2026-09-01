@@ -2,12 +2,14 @@
   <link rel="stylesheet" href="dashboard.css">
   <link rel="stylesheet" href="homepage.css">
   <link rel="stylesheet" href="workout-page.css">
+  <link rel="stylesheet" href="logout.css">
   <title>Dashboard Homepage</title>
 </head>
 
 <body>
-
+  
   <h1>Finn's Dashboard</h1>
+  <button id="logout-button" class="logout-button">Log Out</button>
   <div>
     <h1 class="link-headers">
       <u class="current-page-header">Home Page</u>
@@ -217,4 +219,7 @@
     checkAuthentication();
 </script>
 <script src="shared-data.js"></script>
+<script src="dashboard-sync.js"></script>
+<script src="auth.js"></script>
+<script src="logout.js"></script>
 <script src="homepage.js"></script>

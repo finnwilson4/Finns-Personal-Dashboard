@@ -476,4 +476,13 @@ async function initUniPage() {
     updateUniPage();
 }
 
-initUniPage();
+async function startUniPage() {
+
+    const loggedIn = await requireLogin();
+
+    if (!loggedIn) return;
+
+    await initUniPage();
+}
+
+startUniPage();

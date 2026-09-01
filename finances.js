@@ -1134,4 +1134,13 @@ async function initializeFinancePage() {
     console.log("Max balance:", Math.max(...result.forecast.total));
 }
 
-initializeFinancePage();
+async function startFinancePage() {
+
+    const loggedIn = await requireLogin();
+
+    if (!loggedIn) return;
+
+    await initializeFinancePage();
+}
+
+startFinancePage();

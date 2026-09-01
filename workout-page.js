@@ -123,4 +123,13 @@ async function initWorkoutPage() {
 
 }
 
-initWorkoutPage()
+async function startWorkoutPage() {
+
+    const loggedIn = await requireLogin();
+
+    if (!loggedIn) return;
+
+    await initWorkoutPage();
+}
+
+startWorkoutPage();

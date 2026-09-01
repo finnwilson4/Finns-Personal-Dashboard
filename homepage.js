@@ -292,4 +292,13 @@ async function init() {
     renderTodayMeal();
 }
 
-init();
+async function startPage() {
+
+    const loggedIn = await requireLogin();
+
+    if (!loggedIn) return;
+
+    await init();
+}
+
+startPage();
