@@ -32,9 +32,11 @@ export const modules = [
         },
         {
             name: "Astro Research Techs  4020",
-            lecturer: "Alonso Almaini",
+            lecturer: "Omar Almaini",
             weight: 20/120,
             lectureDays: [
+                {day: "", start: "", end:""},
+                {day: "", start: "", end:""}
             ],
             components: [
                 { name: "Astro.Coursework", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
@@ -48,6 +50,8 @@ export const modules = [
             lecturer: "Name Here",
             weight: 20/120,
             lectureDays: [
+                {day: "", start: "", end:""},
+                {day: "", start: "", end:""}
             ],
             components: [
                 { name: "Cosmo.Coursework", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
@@ -61,6 +65,8 @@ export const modules = [
             lecturer: "Name Here",
             weight: 50/120,
             lectureDays: [
+                {day: "", start: "", end:""},
+                {day: "", start: "", end:""}
             ],
             components: [
                 { name: "Lit Review", due: "2026-09-01", value: 50, weight: 10, completed: false, achieved: null},
