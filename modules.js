@@ -4,8 +4,8 @@ export const modules = [
             lecturer: "Paul Saffin",
             weight: 10/120,
             lectureDays: [
-                {day: "Monday", start: "09:00", end:"10:00"},
-                {day: "Thursday", start:"13:00", end:"14:00"}
+                {day: "Monday", start: "11:00", end:"12:00"},
+                {day: "Monday", start:"12:00", end:"13:00"}
             ],
             components: [
                 { name: "Grav.Coursework", due: "2026-07-24", value: 50, weight: 25, completed: false, achieved: null },
@@ -19,8 +19,9 @@ export const modules = [
             lecturer: "Name Here",
             weight: 20/120,
             lectureDays: [
-                {day: "Tuesday", start: "09:00", end:"10:00"},
-                {day: "Friday", start:"13:00", end:"14:00"}
+                {day: "Tuesday", start: "10:00", end:"12:00"},
+                {day: "Tuesday", start:"14:00", end:"16:00"},
+                {day: "Thursday", start:"10:00", end:"12:00"}
             ],
             components: [
                 { name: "I+DP.Coursework", due: "2026-06-18", value: 50, weight: 25, completed: false, achieved: null},
@@ -31,11 +32,9 @@ export const modules = [
         },
         {
             name: "Astro Research Techs  4020",
-            lecturer: "Name Here",
+            lecturer: "Alonso Almaini",
             weight: 20/120,
             lectureDays: [
-                {day: "Wednesday", start: "09:00", end:"10:00"},
-                {day: "Monday", start:"13:00", end:"14:00"}
             ],
             components: [
                 { name: "Astro.Coursework", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
@@ -49,8 +48,6 @@ export const modules = [
             lecturer: "Name Here",
             weight: 20/120,
             lectureDays: [
-                {day: "Friday", start: "09:00", end:"10:00"},
-                {day: "Wednesday", start:"13:00", end:"14:00"}
             ],
             components: [
                 { name: "Cosmo.Coursework", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
@@ -64,8 +61,6 @@ export const modules = [
             lecturer: "Name Here",
             weight: 50/120,
             lectureDays: [
-                {day: "Thursday", start: "09:00", end:"10:00"},
-                {day: "Tuesday", start:"13:00", end:"14:00"}
             ],
             components: [
                 { name: "Lit Review", due: "2026-09-01", value: 50, weight: 10, completed: false, achieved: null},
