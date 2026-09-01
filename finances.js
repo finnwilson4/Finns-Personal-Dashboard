@@ -156,7 +156,7 @@ function generateWorkSchedule() {
     containers.workScheduleContainer.innerHTML = html;
 }
 
-function updateWorkDay(index, field, value) {
+async function updateWorkDay(index, field, value) {
 
     if (field === "worked") {
         financeState.workSchedule[index].worked = value === "true";
@@ -164,7 +164,7 @@ function updateWorkDay(index, field, value) {
         financeState.workSchedule[index][field] = value;
     }
 
-    saveFinances();
+    await saveFinances();
     generateWorkSchedule();
     updateForecastChart();
 }
@@ -425,8 +425,8 @@ const forecastChartMonth= new Chart(ctxM, {
     }
 });
 
-function updateForecastChart () {
-    saveFinances();
+async function updateForecastChart () {
+    await saveFinances();
     const result = simulate(financeState);
 
     const labels = dates.map(date =>
@@ -855,7 +855,7 @@ function renderPayTracker() {
     
 }
 
-function updatePayTracker(date, field, value) {
+async function updatePayTracker(date, field, value) {
 
     if (!financeState.payTracker[date]) {
         financeState.payTracker[date] = {
@@ -867,7 +867,7 @@ function updatePayTracker(date, field, value) {
 
     financeState.payTracker[date][field] = Number(value);
 
-    saveFinances();
+    await saveFinances();
     renderPayTracker();
     updatePayTrackerChart();
 }
@@ -1035,8 +1035,16 @@ function updatePayTrackerChart() {
     payChart.update();
 }
 
-function saveFinances() {
-    localStorage.setItem("financeState", JSON.stringify(financeState));
+async function saveFinances() {
+
+    const success = await updateDashboardSection(
+        "financeState",
+        financeState
+    );
+
+    if (!success) {
+        console.error("Failed to save finance data to Supabase.");
+    }
 }
 
 function mergeDeep(defaults, saved) {
@@ -1068,40 +1076,57 @@ function mergeDeep(defaults, saved) {
     return defaults;
 }
 
-function loadFinances() {
+async function loadFinances() {
 
-    const saved = localStorage.getItem("financeState");
+    const savedData = await loadDashboardData();
 
-    if (!saved) return;
+    if (!savedData || !savedData.financeState) {
+        console.log("No saved finance data found.");
+        return;
+    }
 
-    const loaded = JSON.parse(saved, (key, value) => {
-
-        if (key === "date") {
-            return new Date(value);
-        }
-
-        return value;
-    });
+    const loaded = savedData.financeState;
 
     mergeDeep(financeState, loaded);
 
     if (loaded.payTracker) {
         financeState.payTracker = loaded.payTracker;
     }
+
+    // Convert saved dates back into Date objects
+    if (financeState.workSchedule) {
+        financeState.workSchedule = financeState.workSchedule.map(day => ({
+            ...day,
+            date: day.date ? new Date(day.date) : undefined
+        }));
+    }
+
+    if (financeState.oneOffExpenses) {
+        financeState.oneOffExpenses =
+            financeState.oneOffExpenses.map(expense => ({
+                ...expense,
+                date: new Date(expense.date)
+            }));
+    }
+
+    console.log("Finance data loaded from Supabase.");
 }
 
-function initializeFinancePage() {
-    loadFinances();
+async function initializeFinancePage() {
+
+    await loadFinances();
+
     generateWorkSchedule();
     generatePayAllocationInputs();
-    generateBalances()
-    generateOutgoingsBar()
+    generateBalances();
+    generateOutgoingsBar();
     generateExpenseSliders();
     updateForecastChart();
     renderPayTracker();
     updatePayTrackerChart();
 
     const result = simulate(financeState);
+
     console.log("result:", result);
     console.log("total (last day):", result.forecast.total.at(-1));
     console.log("spending (last day):", result.forecast.spending.at(-1));
@@ -1109,4 +1134,4 @@ function initializeFinancePage() {
     console.log("Max balance:", Math.max(...result.forecast.total));
 }
 
-initializeFinancePage()
+initializeFinancePage();

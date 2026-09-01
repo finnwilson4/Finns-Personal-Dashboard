@@ -5,9 +5,20 @@ const ingredientsContainer = document.getElementById("ingredients-container");
 const missingIngredientsContainer = document.getElementById("missing-ingredients-container")
 
 // Meal Information
-const schedule = JSON.parse(localStorage.getItem("mealSchedule")) || {};
+let schedule = {};
 const categories = ["Fridge", "Freezer", "Cupboard"];
-const ingredientStock = JSON.parse(localStorage.getItem("ingredientStock")) || {};
+let ingredientStock = {};
+
+async function loadMealPlannerData() {
+    const savedData = await loadDashboardData();
+
+    if (savedData) {
+        schedule = savedData.mealSchedule || {};
+        ingredientStock = savedData.ingredientStock || {};
+    }
+
+    console.log("Meal planner data loaded from Supabase.");
+}
 
 function renderMeals() {
 
@@ -247,8 +258,6 @@ function updateIngredientNeeds() {
 
 function calculateRequiredIngredients() {
 
-    const schedule = JSON.parse(localStorage.getItem("mealSchedule")) || {};
-    const stock = JSON.parse(localStorage.getItem("ingredientStock")) || {};
     const mealCounts = {};
 
     // Count how many times each meal appears
@@ -286,7 +295,7 @@ function calculateRequiredIngredients() {
     for (const [ingredientKey, required]
         of Object.entries(ingredientsNeeded)) {
 
-        const owned = Number(stock[ingredientKey]) || 0;
+        const owned = Number(ingredientStock[ingredientKey]) || 0;
 
         if (owned < required) {
             shoppingList[ingredientKey] = required - owned;
@@ -304,15 +313,28 @@ function updateMealPlan() {
         select.addEventListener("change", () => {
 
             const day = select.dataset.day;
-            const schedule = JSON.parse(localStorage.getItem("mealSchedule")) || {};
 
             schedule[day] = select.value;
 
-            localStorage.setItem("mealSchedule", JSON.stringify(schedule));
+            saveMealPlannerData();
 
             updateIngredientNeeds();
         });
     });
+}
+
+async function saveMealPlannerData() {
+
+    const savedData = await loadDashboardData() || {};
+
+    savedData.mealSchedule = schedule;
+    savedData.ingredientStock = ingredientStock;
+
+    const success = await saveDashboardData(savedData);
+
+    if (!success) {
+        console.error("Failed to save meal planner data.");
+    }
 }
 
 // Load Selected Options
@@ -343,17 +365,16 @@ function updateInputs() {
 
             ingredientStock[key] = input.value;
 
-            localStorage.setItem(
-                "ingredientStock",
-                JSON.stringify(ingredientStock)
-            );
+            saveMealPlannerData();
 
             updateIngredientNeeds();
         });
     });
 }
 
-function initPage() {
+async function initPage() {
+
+    await loadMealPlannerData();
 
     renderMeals();
     renderMealPlan();

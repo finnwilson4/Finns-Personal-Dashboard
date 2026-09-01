@@ -4,6 +4,9 @@ containers = {
     financeContainer: document.querySelector("#finances-summary"),
 }
 
+let homepageData = {};
+let workoutSchedule = {};
+
 // DEFINE WEBSITE HOMEPAGE INPUTS
 const websiteInputs = [
     "bookName",
@@ -27,11 +30,26 @@ const websiteInputs = [
 function setupStorage(id) {
     const element = document.getElementById(id);
 
-    element.value = localStorage.getItem(id) || "";
+    element.value = homepageData[id] || "";
 
-    element.addEventListener("input", () => {
-        localStorage.setItem(id, element.value);
+    element.addEventListener("input", async () => {
+        homepageData[id] = element.value;
+
+        await saveHomepageData();
     });
+}
+
+async function saveHomepageData() {
+
+    const savedData = await loadDashboardData() || {};
+
+    savedData.homepage = homepageData;
+
+    const success = await saveDashboardData(savedData);
+
+    if (!success) {
+        console.error("Failed to save homepage data.");
+    }
 }
 
 function initializeStorage() {
@@ -57,23 +75,30 @@ function initializeBingoTable() {
     const bingoCells = document.querySelectorAll(".bingo-table td");
 
     bingoCells.forEach((cell, index) => {
-        const saved = localStorage.getItem(`bingo-${index}`);
 
-        if (saved === "true") {
+        const key = `bingo-${index}`;
+
+        // Restore saved state
+        if (homepageData[key] === true) {
             cell.classList.add("completed");
+        } else {
+            cell.classList.remove("completed");
         }
 
-        cell.addEventListener("click", () => {
-            cell.classList.toggle("completed");
+        // Toggle state when clicked
+        cell.addEventListener("click", async () => {
 
-            localStorage.setItem(
-                `bingo-${index}`,
-                cell.classList.contains("completed")
-            );
+            const completed = !cell.classList.contains("completed");
+
+            cell.classList.toggle("completed", completed);
+
+            homepageData[key] = completed;
+
+            await saveHomepageData();
         });
     });
 }
-console.log("1",financeState.balances.Car)
+
 // PROGRESS TRACKER FOR GOALS
 function setupProgress(amountId, goalId, progressId, balanceName = null) {
 
@@ -125,12 +150,12 @@ function getTodayName() {
 }
 
 function renderTodayWorkout() {
-    const today = getTodayName();
+    const today = getTodayName().toLowerCase();
 
-    const workoutName = localStorage.getItem(`workout-${today.toLowerCase()}`);
+    const workoutName = workoutSchedule[today];
+
     const workout = workouts[workoutName];
     
-
     if (!workoutName || !workout) {
         containers.workoutContainer.innerHTML = `
             <div>
@@ -161,11 +186,12 @@ function renderTodayWorkout() {
             </table>
         </div>
     `;
+    
 }
 
 function missingIngredientsForTea(meal) {
 
-    const stock = JSON.parse(localStorage.getItem("ingredientStock")) || {};
+    const stock = ingredientStock;
     const missing = {};
 
     for (const [ingredientKey, quantity] of Object.entries(meal.ingredients)) {
@@ -181,7 +207,7 @@ function renderTodayMeal() {
     const today = getTodayName();
 
     const mealsContainer = document.getElementById("today-meal-card");
-    const mealSchedule = JSON.parse(localStorage.getItem("mealSchedule")) || {};
+    const mealSchedule = schedule;
     const mealName = mealSchedule[today.toLowerCase()];
     const meal = meals[mealName];
 
@@ -197,7 +223,6 @@ function renderTodayMeal() {
     .map(([ingredientKey, qty]) => {
         const ingredient = ingredients[ingredientKey];
         const packsNeeded = Math.ceil(qty / ingredient.number);
-        console.log(packsNeeded)
 
         cost += ingredient.price * packsNeeded;
 
@@ -220,23 +245,45 @@ function renderTodayMeal() {
 
 }
 
-function loadFinances() {
-    const saved = localStorage.getItem("financeState");
+async function loadHomepageData() {
 
-    if (!saved) return;
+    const savedData = await loadDashboardData();
 
-    const loaded = JSON.parse(saved, (key, value) => {
-        if (key === "date") {
-            return new Date(value);
+    if (!savedData) {
+        console.log("No saved dashboard data found.");
+        return;
+    }
+
+    // Load homepage-specific data
+    homepageData = savedData.homepage || {};
+
+    // Load workout data
+    workoutSchedule = savedData.workoutSchedule || {};
+
+    // Load meal planner data
+    schedule = savedData.mealSchedule || {};
+    ingredientStock = savedData.ingredientStock || {};
+
+    // Load finance data
+    if (savedData.financeState) {
+        Object.assign(financeState, savedData.financeState);
+
+        if (financeState.oneOffExpenses) {
+            financeState.oneOffExpenses =
+                financeState.oneOffExpenses.map(expense => ({
+                    ...expense,
+                    date: new Date(expense.date)
+                }));
         }
-        return value;
-    });
+    }
 
-    Object.assign(financeState, loaded);
+    console.log("Homepage data loaded from Supabase.");
 }
 
-function init() {
-    loadFinances();
+async function init() {
+
+    await loadHomepageData();
+
     initializeStorage();
     initializeNotes();
     initializeBingoTable();

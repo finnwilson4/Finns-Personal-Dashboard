@@ -372,7 +372,7 @@ function generateDeadlines() {
     `;
 }
 
-document.addEventListener("input", (e) => {
+document.addEventListener("input", async (e) => {
     if (e.target.classList.contains("year4-slider")) {
 
         const m = Number(e.target.dataset.m);
@@ -384,11 +384,11 @@ document.addEventListener("input", (e) => {
 
         document.getElementById(`m${m}-c${c}`).textContent = value;
 
-        refreshGrades();
+        await refreshGrades();
     }
 });
 
-document.addEventListener("change", e => {
+document.addEventListener("change", async e => {
 
     const m = Number(e.target.dataset.module);
     const c = Number(e.target.dataset.component);
@@ -406,42 +406,59 @@ document.addEventListener("change", e => {
     }
 
     generateDeadlines();
-    refreshGrades();
+    await refreshGrades();
     generateModuleDescription();
     renderYear4Sliders();
 });
 
-function saveState() {
-    localStorage.setItem(
-        "uniTracker",
-        JSON.stringify({
-            modules
-        })
-    );
+async function saveUniData() {
+
+    const savedData = await loadDashboardData() || {};
+
+    savedData.uniData = {
+        modules
+    };
+
+    const success = await saveDashboardData(savedData);
+
+    if (!success) {
+        console.error("Failed to save university data.");
+    }
 }
 
-function loadState() {
-    const saved = localStorage.getItem("uniTracker");
+async function loadUniData() {
 
-    if (!saved) return;
+    const savedData = await loadDashboardData();
 
-    const state = JSON.parse(saved);
+    if (!savedData || !savedData.uniData) {
+        return;
+    }
 
-    // Restore modules
+    const savedModules = savedData.uniData.modules;
+
     modules.forEach((module, mIndex) => {
+
         module.components.forEach((component, cIndex) => {
-            Object.assign(
-                component,
-                state.modules[mIndex].components[cIndex]
-            );
+
+            if (
+                savedModules[mIndex] &&
+                savedModules[mIndex].components[cIndex]
+            ) {
+                Object.assign(
+                    component,
+                    savedModules[mIndex].components[cIndex]
+                );
+            }
         });
     });
+
+    console.log("University data loaded from Supabase.");
 }
 
-function refreshGrades() {
+async function refreshGrades() {
     updateProgressStats();
     generateY4Targets();
-    saveState();
+    await saveUniData();
 }
 
 function updateUniPage() {
@@ -452,5 +469,11 @@ function updateUniPage() {
     generateModuleDescription();
 }
 
-loadState()
-updateUniPage()
+async function initUniPage() {
+
+    await loadUniData();
+
+    updateUniPage();
+}
+
+initUniPage();
