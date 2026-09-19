@@ -203,6 +203,7 @@
 
 .work-schedule td {
     border: 1px solid;
+    position: relative;
 }
 
 .work-table td.not-worked {
@@ -214,6 +215,15 @@
     vertical-align: top;
 }
 
+.work-date {
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    color: rgba(237, 30, 30, 0.941);
+}
+
 .work-table select {
     background: none;
     border: none;
@@ -222,10 +232,8 @@
 .work-table td.worked input,
 .work-table td.worked select {
     display: block;
-    width: 90%;
+    width: 100%;
     text-align: center;
-    margin-left: 4px;
-    margin-right: 4px;
     border: none;
     background: rgba(158, 189, 172, 0.173)
 }

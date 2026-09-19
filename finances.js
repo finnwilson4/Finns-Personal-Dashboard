@@ -82,8 +82,44 @@ financeState.workSchedule = Array.from({ length: 35 }, (_, i) => {
     };
 });
 
+const PAY_PERIOD_ANCHOR = new Date(2026, 8, 25); // 25 September 2026
+const PAY_PERIOD_PATTERN = [4, 4, 5];
+
+function getPayPeriodWeeks(payDate) {
+    const targetDate = new Date(payDate);
+    targetDate.setHours(0, 0, 0, 0);
+
+    const anchor = new Date(PAY_PERIOD_ANCHOR);
+    anchor.setHours(0, 0, 0, 0);
+
+    // Work out how many 4/4/5 periods away from the anchor we are
+    let periodIndex = 0;
+    let currentDate = new Date(anchor);
+
+    if (targetDate >= anchor) {
+        while (currentDate < targetDate) {
+            currentDate.setDate(
+                currentDate.getDate() + PAY_PERIOD_PATTERN[periodIndex % 3] * 7
+            );
+            periodIndex++;
+        }
+    } else {
+        while (currentDate > targetDate) {
+            periodIndex--;
+            currentDate.setDate(
+                currentDate.getDate() - PAY_PERIOD_PATTERN[((periodIndex % 3) + 3) % 3] * 7
+            );
+        }
+    }
+
+    return PAY_PERIOD_PATTERN[((periodIndex % 3) + 3) % 3];
+}
+
 function generateWorkSchedule() {
-    const weeks = 5;
+    const today = new Date();
+    const currentPayDate = payDates.find(payDate => payDate >= today) || payDates[payDates.length - 1];
+
+    const weeks = getPayPeriodWeeks(currentPayDate);
     const daysPerWeek = 7;
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const totalHours = calculateTotalHours();
@@ -104,8 +140,13 @@ function generateWorkSchedule() {
             const index = week * daysPerWeek + day;
             const workDay = financeState.workSchedule[index];
 
+            const date = new Date(2026, 7, 16);
+            date.setDate(date.getDate() + index);
+
             html += `
                 <td class="${workDay.worked ? "worked" : "not-worked"}">
+                
+                <span class="work-date">${date.getDate()} ${date.toLocaleString('en-GB', { month: 'short' })}</span>
 
                 <select onchange="updateWorkDay(${index}, 'worked', this.value)">
                     <option value="false" ${!workDay.worked ? "selected" : ""}>N/A</option>
