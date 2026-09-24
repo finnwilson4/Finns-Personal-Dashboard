@@ -213,7 +213,6 @@ function generateModuleDescription() {
         Completed:
         ${completedWeight}%
     </p>
-                <textarea></textarea>
                 <p>Days: ${module.lectureDays[0].day}, ${module.lectureDays[1].day}</p>
                 <h3 style="text-align: left">Assignments:</h3>
                 <table class="module-assignment-table">
