@@ -8,10 +8,7 @@ export const modules = [
                 {day: "Monday", start:"12:00", end:"13:00"}
             ],
             components: [
-                { name: "Grav.Coursework", due: "2026-07-24", value: 50, weight: 25, completed: false, achieved: null },
-                { name: "Grav.Exam 1", due: "2026-06-22", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Grav.Exam 2", due: "2026-06-26", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Grav.Exam 3", due: "2026-06-26", value: 50, weight: 25, completed: false, achieved: null},
+                { name: "Grav.Coursework", due: "2026-07-24", value: 50, weight: 100, completed: false, achieved: null },
             ]
         },
         {
@@ -24,10 +21,10 @@ export const modules = [
                 {day: "Thursday", start:"10:00", end:"12:00"}
             ],
             components: [
-                { name: "I+DP.Coursework", due: "2026-06-18", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "I+DP.Exam 1", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "I+DP.Exam 2", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "I+DP.Exam 3", due: "2026-06-26", value: 50, weight: 25, completed: false, achieved: null},
+                { name: "I+DP. Project", due: "2026-06-18", value: 50, weight: 40, completed: false, achieved: null},
+                { name: "I+DP. Presentation", due: "2026-09-01", value: 50, weight: 30, completed: false, achieved: null},
+                { name: "I+DP. Problem Sheets", due: "2026-09-01", value: 50, weight: 30, completed: false, achieved: null},
+                
             ]
         },
         {
@@ -39,10 +36,11 @@ export const modules = [
                 {day: "", start: "", end:""}
             ],
             components: [
-                { name: "Astro.Coursework", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Astro.Exam 1", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Astro.Exam 2", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Astro.Exam 3", due: "2026-06-26", value: 50, weight: 25, completed: false, achieved: null},
+                { name: "Astro. Coursework 1", due: "2026-09-01", value: 50, weight: 35, completed: false, achieved: null},
+                { name: "Concept Proposal", due: "2026-09-01", value: 50, weight: 5, completed: false, achieved: null},
+                { name: "Full Proposal", due: "2026-09-01", value: 50, weight: 40, completed: false, achieved: null},
+                { name: "Astro. Coursework 2", due: "2026-06-26", value: 50, weight: 10, completed: false, achieved: null},
+                { name: "Astro. Presentation", due: "2026-06-26", value: 50, weight: 10, completed: false, achieved: null},
             ]
         },
         {
@@ -54,10 +52,8 @@ export const modules = [
                 {day: "", start: "", end:""}
             ],
             components: [
-                { name: "Cosmo.Coursework", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Cosmo.Exam 1", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Cosmo.Exam 2", due: "2026-09-01", value: 50, weight: 25, completed: false, achieved: null},
-                { name: "Cosmo.Exam 3", due: "2026-06-26", value: 50, weight: 25, completed: false, achieved: null},
+                { name: "Cosmo. Coursework", due: "2026-09-01", value: 50, weight: 50, completed: false, achieved: null},
+                { name: "Cosmo. Project", due: "2026-09-01", value: 50, weight: 50, completed: false, achieved: null},
             ]
         },
         {
@@ -71,7 +67,7 @@ export const modules = [
             components: [
                 { name: "Lit Review", due: "2026-09-01", value: 50, weight: 10, completed: false, achieved: null},
                 { name: "Viva", due: "2026-09-01", value: 50, weight: 40, completed: false, achieved: null},
-                { name: "Diss", due: "2026-09-01", value: 50, weight: 50, completed: false, achieved: null},
+                { name: "Project Report", due: "2026-09-01", value: 50, weight: 50, completed: false, achieved: null},
                 
             ]
         },
