@@ -115,11 +115,8 @@
     margin: 0;
 }
 
-.module-description textarea {
-    width: 100%;
-    background: none;
-    resize: vertical;
-    border: none;
+.module-description p{
+    margin: 0px;
 }
 
 .urgent { color: red; }
