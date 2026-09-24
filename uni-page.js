@@ -204,16 +204,11 @@ function generateModuleDescription() {
             <div class="card module-description">
                 <h3>${module.name}</h3>
                 <h4>${module.lecturer}</h4>
-                <p>
-        Current Grade:
-        ${actualGrade.toFixed(1)}%
-    </p>
-
-    <p>
-        Completed:
-        ${completedWeight}%
-    </p>
+                
+                <p> Current Grade: ${actualGrade.toFixed(1)}% </p>
+                <p> Completed: ${completedWeight}% </p>
                 <p>Days: ${module.lectureDays[0].day}, ${module.lectureDays[1].day}</p>
+                
                 <h3 style="text-align: left">Assignments:</h3>
                 <table class="module-assignment-table">
                     ${rows}
