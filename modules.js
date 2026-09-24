@@ -66,8 +66,11 @@ export const modules = [
             ],
             components: [
                 { name: "Lit Review", due: "2026-09-01", value: 50, weight: 10, completed: false, achieved: null},
-                { name: "Viva", due: "2026-09-01", value: 50, weight: 40, completed: false, achieved: null},
-                { name: "Project Report", due: "2026-09-01", value: 50, weight: 50, completed: false, achieved: null},
+                { name: "Project Plan", due: "2026-09-01", value: 50, weight: 5, completed: false, achieved: null},
+                { name: "Mid Diary", due: "2026-09-01", value: 50, weight: 3, completed: false, achieved: null},
+                { name: "Viva", due: "2026-09-01", value: 50, weight: 12, completed: false, achieved: null},
+                { name: "Full Diary", due: "2026-09-01", value: 50, weight: 10, completed: false, achieved: null},
+                { name: "Project Report", due: "2026-09-01", value: 50, weight: 60, completed: false, achieved: null},
                 
             ]
         },
