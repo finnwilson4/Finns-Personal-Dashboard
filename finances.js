@@ -82,44 +82,55 @@ financeState.workSchedule = Array.from({ length: 35 }, (_, i) => {
     };
 });
 
-const PAY_PERIOD_ANCHOR = new Date(2026, 8, 25); // 25 September 2026
-const PAY_PERIOD_PATTERN = [4, 4, 5];
+const PAY_PERIOD_ANCHOR = new Date(2026, 7, 16); // Sunday 16 August 2026
+const PAY_PERIOD_PATTERN = [4, 5, 4];
 
-function getPayPeriodWeeks(payDate) {
-    const targetDate = new Date(payDate);
+function getPayPeriod(date = new Date()) {
+    const targetDate = new Date(date);
     targetDate.setHours(0, 0, 0, 0);
 
-    const anchor = new Date(PAY_PERIOD_ANCHOR);
-    anchor.setHours(0, 0, 0, 0);
+    const periodStart = new Date(PAY_PERIOD_ANCHOR);
+    periodStart.setHours(0, 0, 0, 0);
 
-    // Work out how many 4/4/5 periods away from the anchor we are
     let periodIndex = 0;
-    let currentDate = new Date(anchor);
 
-    if (targetDate >= anchor) {
-        while (currentDate < targetDate) {
-            currentDate.setDate(
-                currentDate.getDate() + PAY_PERIOD_PATTERN[periodIndex % 3] * 7
-            );
-            periodIndex++;
-        }
-    } else {
-        while (currentDate > targetDate) {
-            periodIndex--;
-            currentDate.setDate(
-                currentDate.getDate() - PAY_PERIOD_PATTERN[((periodIndex % 3) + 3) % 3] * 7
-            );
-        }
+    // Keep the index within the pattern, including for dates before the anchor.
+    const patternIndex = index =>
+        ((index % PAY_PERIOD_PATTERN.length) + PAY_PERIOD_PATTERN.length)
+        % PAY_PERIOD_PATTERN.length;
+
+    // Move forward until the target date is inside the period.
+    while (true) {
+        const weeks = PAY_PERIOD_PATTERN[patternIndex(periodIndex)];
+        const nextStart = new Date(periodStart);
+        nextStart.setDate(nextStart.getDate() + weeks * 7);
+
+        if (targetDate < nextStart) break;
+
+        periodStart.setTime(nextStart.getTime());
+        periodIndex++;
     }
 
-    return PAY_PERIOD_PATTERN[((periodIndex % 3) + 3) % 3];
+    // Move backward if the target date is before the anchor/current start.
+    while (targetDate < periodStart) {
+        periodIndex--;
+        const previousWeeks = PAY_PERIOD_PATTERN[patternIndex(periodIndex)];
+        periodStart.setDate(periodStart.getDate() - previousWeeks * 7);
+    }
+
+    return {
+        startDate: periodStart,
+        weeks: PAY_PERIOD_PATTERN[patternIndex(periodIndex)]
+    };
 }
 
 function generateWorkSchedule() {
     const today = new Date();
     const currentPayDate = payDates.find(payDate => payDate >= today) || payDates[payDates.length - 1];
 
-    const weeks = getPayPeriodWeeks(currentPayDate);
+    const currentPeriod = getPayPeriod();
+const weeks = currentPeriod.weeks;
+const periodStartDate = currentPeriod.startDate;
     const daysPerWeek = 7;
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const totalHours = calculateTotalHours();
@@ -140,7 +151,7 @@ function generateWorkSchedule() {
             const index = week * daysPerWeek + day;
             const workDay = financeState.workSchedule[index];
 
-            const date = new Date(2026, 7, 16);
+            const date = new Date(periodStartDate);
             date.setDate(date.getDate() + index);
 
             html += `
@@ -305,10 +316,10 @@ function simulate(financeState) {
             changes.Savings[i] += pay - monthlyFixed - allocated;
         }
 
-        if (isPayDay && i < 30)
+        if (isPayDay && i > 250)
         {
-            changes.Savings[i] -= ( - (monthlyFixed))
-            changes.Bills[i] -= (monthlyFixed);
+            changes.Savings[i] -= ( - (400))
+            changes.Bills[i] -= (400);
         }
 
         Object.values(financeState.monthlyOutgoings).forEach(outgoing => {
@@ -326,13 +337,14 @@ function simulate(financeState) {
                 changes.Bills[i] += outgoing.amount
             }
 
-            if ((outgoing.name === "Rent" || "Spotify")
-                && (i < 30)
-                && today.getDate() === outgoing.day)
-            {   
-                changes.Bills[i] -= outgoing.amount;
-                dailyChange[i] -= outgoing.amount;
+            if ((outgoing.name === "Rent")
+                && today.getDate() === outgoing.day
+                && today > dates[250])
+            {
+                changes.Bills[i] -= outgoing.amount
+                dailyChange[i] -= outgoing.amount
             }
+
         });
 
         const dailyFood = Math.abs(financeState.monthlyOutgoings.Food.amount)*12/365;
