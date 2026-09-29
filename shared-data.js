@@ -553,7 +553,7 @@ const financeState = {
     monthlyOutgoings: {
         Rent: {
             name: "Rent",
-            amount: -400,
+            amount: -350,
             type: "monthly",
             day: 1
         },
@@ -574,7 +574,7 @@ const financeState = {
 
         Storage: {
             name: "Storage",
-            amount: -76,
+            amount: -95,
             type: "monthly",
             day: 20,
         },
