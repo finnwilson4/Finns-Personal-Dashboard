@@ -13,7 +13,7 @@ export const modules = [
         },
         {
             name: "Imaging / Data Processing 4019",
-            lecturer: "Name Here",
+            lecturer: "Frazer Pearce",
             weight: 20/120,
             lectureDays: [
                 {day: "Tuesday", start: "10:00", end:"12:00"},
