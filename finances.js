@@ -124,13 +124,37 @@ function getPayPeriod(date = new Date()) {
     };
 }
 
+
+function getDisplayedPayPeriod() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Find the most recent payday, including today if it is payday.
+    const lastPayDate = [...payDates]
+        .filter(payDate => {
+            const date = new Date(payDate);
+            date.setHours(0, 0, 0, 0);
+            return date <= today;
+        })
+        .at(-1);
+
+    // Before the first payday in the list, use today's period.
+    if (!lastPayDate) {
+        return getPayPeriod(today);
+    }
+
+    // Display the pay period that started on or before the last payday.
+    return getPayPeriod(lastPayDate);
+}
+
+
 function generateWorkSchedule() {
     const today = new Date();
     const currentPayDate = payDates.find(payDate => payDate >= today) || payDates[payDates.length - 1];
 
-    const currentPeriod = getPayPeriod();
-const weeks = currentPeriod.weeks;
-const periodStartDate = currentPeriod.startDate;
+    const currentPeriod = getDisplayedPayPeriod();
+    const weeks = currentPeriod.weeks;
+    const periodStartDate = currentPeriod.startDate;
     const daysPerWeek = 7;
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const totalHours = calculateTotalHours();
